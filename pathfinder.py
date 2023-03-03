@@ -1,5 +1,5 @@
-import numpy
+import numpy as np
 
-rng = numpy.random.default_rng()
+rng = np.random.default_rng()
 numbs = rng.normal(size=5)
 print(numbs)
