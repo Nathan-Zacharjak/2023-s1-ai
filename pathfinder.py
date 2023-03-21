@@ -17,17 +17,17 @@ inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
 start = (inpStart[0] - 1, inpStart[1] - 1)
 end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
-def CreateFringe(search, node, closed):
+def CreateFringe(search, closed, size, node):
     fringe = []
     if node in closed:
         return fringe
     x = node[0]
     y = node[1]
 
-    up = [x,y-1]
-    down = [x,y+1]
-    left = [x-1,y]
-    right = [x+1,y]
+    up = (x,y-1)
+    down = (x,y+1)
+    left = (x-1,y)
+    right = (x+1,y)
     potentialFringe = [up,down,left,right]
 
     for pos in potentialFringe:
@@ -37,13 +37,17 @@ def CreateFringe(search, node, closed):
             continue
         if yPos < 0 or yPos > size[0] - 1:
             continue
+        if pos in closed:
+            continue
         fringe.append(pos)
+
     return fringe
 
 def GraphSearch(search, size, start, end, inpMap):
     outMap = inpMap
     closed = {}
-    fringe = CreateFringe(search, start, closed)
+    fringe = CreateFringe(search, closed, size, start)
+    print("Fringe:",fringe)
     loopCount = 0
 
     # while loopCount < 10000:
