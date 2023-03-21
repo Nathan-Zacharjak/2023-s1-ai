@@ -43,7 +43,7 @@ def CreateFringe(search, node, closed):
 def GraphSearch(search, size, start, end, inpMap):
     outMap = inpMap
     closed = {}
-    fringe = CreateFringe(search, start, closed, inpMap)
+    fringe = CreateFringe(search, start, closed)
     loopCount = 0
 
     # while loopCount < 10000:
