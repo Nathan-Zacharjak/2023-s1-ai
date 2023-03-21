@@ -50,10 +50,10 @@ def GraphSearch(search, size, start, end, inpMap):
     print("Fringe:",fringe)
     loopCount = 0
 
-    # while loopCount < 10000:
-    #     loopCount += 1
-    #     if len(fringe) == 0:
-    #         return False
+    while loopCount < 10000:
+        loopCount += 1
+        if len(fringe) == 0:
+            return "Fringe empty"
         
         # node = RemoveFront(fringe)
 
@@ -64,9 +64,8 @@ def GraphSearch(search, size, start, end, inpMap):
         #     closed.add(state[node])
         #     fringe = InsertAll(Expand(node, problem), fringe)
 
+    return "Loop limit reached!"
+
 result = GraphSearch(search, size, start, end, inpMap)
 print("Result:")
-if not result:
-    print("null")
-else:
-    print(result)
+print(result)
