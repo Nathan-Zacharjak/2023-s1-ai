@@ -61,7 +61,8 @@ def GraphSearch(search, size, start, end, inpMap):
         #     fringe = InsertAll(Expand(node, problem), fringe)
 
 result = GraphSearch(search, size, start, end, inpMap)
+print("Result:")
 if not result:
-    print("Result:","null")
+    print("null")
 else:
-    print("Result:",result)
+    print(result)
