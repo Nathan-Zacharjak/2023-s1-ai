@@ -1,18 +1,22 @@
 import numpy as np
 search = "bfs"
-size = [10,10]
-start = [1,1]
-end = [10,10]
-inpMap = np.array([1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-                  [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-                  [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-                  [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-                  [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-                  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                  [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-                  [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-                  [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-                  ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1])
+inpStart = (1,1)
+inpEnd = (10,10)
+size = (10,10)
+inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
+        [3, 4, 1, 1, 1, 1, 1, 5, 8, 8],
+        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+
+start = (inpStart[0] - 1, inpStart[1] - 1)
+end = (inpEnd[0] - 1, inpEnd[1] - 1)
+
 def CreateFringe(search, node, closed, inpMap):
     fringe = []
     if node in closed:
@@ -20,12 +24,20 @@ def CreateFringe(search, node, closed, inpMap):
     x = node[0]
     y = node[1]
 
-    up = inpMap[x,y-1]
-    down = inpMap[x,y+1]
-    left = inpMap[x-1,y]
-    right = inpMap[x+1,y]
+    up = [x,y-1]
+    down = [x,y+1]
+    left = [x-1,y]
+    right = [x+1,y]
     potentialFringe = [up,down,left,right]
-    print(potentialFringe)
+
+    for pos in potentialFringe:
+        xPos = pos[0]
+        yPos = pos[1]
+        if xPos < 0 or xPos > size[0] - 1:
+            continue
+        if yPos < 0 or yPos > size[0] - 1:
+            continue
+        fringe.append(pos)
     return fringe
 
 def GraphSearch(search, size, start, end, inpMap):
@@ -50,6 +62,6 @@ def GraphSearch(search, size, start, end, inpMap):
 
 result = GraphSearch(search, size, start, end, inpMap)
 if not result:
-    print("null")
+    print("Result:","null")
 else:
-    print(result)
+    print("Result:",result)
