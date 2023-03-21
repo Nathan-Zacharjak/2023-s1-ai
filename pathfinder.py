@@ -17,7 +17,7 @@ inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
 start = (inpStart[0] - 1, inpStart[1] - 1)
 end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
-def CreateFringe(search, node, closed, inpMap):
+def CreateFringe(search, node, closed):
     fringe = []
     if node in closed:
         return fringe
