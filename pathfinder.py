@@ -17,12 +17,15 @@ inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
 start = (inpStart[0] - 1, inpStart[1] - 1)
 end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
-def CreateFringe(search, closed, size, node):
+def GetFringe(search, closed, size, currNode):
     fringe = []
-    if node in closed:
-        return fringe
-    x = node[0]
-    y = node[1]
+    if currNode in closed:
+        return "Tried to create fringe with currNode in closed!"
+    else:
+        fringe.append(currNode)
+
+    x = currNode[0]
+    y = currNode[1]
 
     up = (x,y-1)
     down = (x,y+1)
@@ -43,26 +46,34 @@ def CreateFringe(search, closed, size, node):
 
     return fringe
 
+def GoalTest(search, currNode, inpMap):
+    
+    return False
+
 def GraphSearch(search, size, start, end, inpMap):
     outMap = inpMap
     closed = {}
-    fringe = CreateFringe(search, closed, size, start)
-    print("Fringe:",fringe)
+    fringe = GetFringe(search, closed, size, start)
     loopCount = 0
 
     while loopCount < 10000:
         loopCount += 1
-        if len(fringe) == 0:
+
+        if type(fringe) == "str":
+            return fringe
+        elif len(fringe) == 0:
             return "Fringe empty"
         
-        # node = RemoveFront(fringe)
+        # Remove the current node from the fringe,
+        # and test if it is the end node
+        currNode = fringe.pop(0)
 
-        # if GoalTest(problem, state[node]):
-        #     return outMap
+        if GoalTest(search, currNode, inpMap):
+            return outMap
         
-        # if not (state[node] in closed):
-        #     closed.add(state[node])
-        #     fringe = InsertAll(Expand(node, problem), fringe)
+        # if not (state[currNode] in closed):
+        #     closed.add(state[currNode])
+        #     fringe = InsertAll(Expand(currNode, problem), fringe)
 
     return "Loop limit reached!"
 
