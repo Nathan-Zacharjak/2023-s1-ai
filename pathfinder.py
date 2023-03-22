@@ -19,24 +19,20 @@ inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
 start = (inpStart[0] - 1, inpStart[1] - 1)
 end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
-# Returns the fringe from a specified node
-def GetFringe(closed, size, currNode, inpMap):
-    fringe = []
-    if currNode in closed:
-        return "Tried to create fringe with currNode in closed!"
-    else:
-        fringe.append(currNode)
-
-    x = currNode[0]
-    y = currNode[1]
+# Takes a node and returns all nodes connected to it
+# that aren't closed
+def ExpandNode(closed, node, size, inpMap):
+    nodes = []
+    x = node[0]
+    y = node[1]
 
     up = (x,y-1)
     down = (x,y+1)
     left = (x-1,y)
     right = (x+1,y)
-    potentialFringe = [up,down,left,right]
+    potentialExpand = [up,down,left,right]
 
-    for pos in potentialFringe:
+    for pos in potentialExpand:
         xPos = pos[0]
         yPos = pos[1]
 
@@ -49,7 +45,13 @@ def GetFringe(closed, size, currNode, inpMap):
         if inpMap[xPos][yPos] == "X":
             continue
 
-        fringe.append(pos)
+        nodes.append(pos)
+
+    return nodes
+
+# Returns the fringe from a specified depth
+def GetFringe(search, closed, size, start, inpMap, fringe):
+    
 
     return fringe
 
@@ -64,18 +66,24 @@ def GoalTest(currNode, outMap, end):
 
     return outMap, isGoalNode
 
+def SelectNextNode(fringe, search):
+
+            
+    return nextNode
+
 # Takes a search type, a grid to search, and a start and end
 # and returns a path through the grid from the start
 # to the goal by making "*"s along the path it found.
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, inpMap):
     outMap = inpMap
-    closed = {}
-    fringe = GetFringe(closed, size, start, inpMap)
-    loopCount = 0
+    closed = set()
+    depth = 0
+    fringe = []
+    fringe = GetFringe(search, closed, size, start, inpMap, depth, fringe)
 
-    while loopCount < 10000:
-        loopCount += 1
+    while depth < 10000:
+        depth += 1
 
         if type(fringe) == str:
             return fringe
@@ -90,9 +98,9 @@ def GraphSearch(search, size, start, end, inpMap):
         if goalReached:
             return outMap
         
-        # if not (state[currNode] in closed):
-        #     closed.add(state[currNode])
-        #     fringe = InsertAll(Expand(currNode, problem), fringe)
+        closed.add(currNode)
+        currNode = SelectNextNode(fringe, search)
+        fringe = GetFringe(closed, size, start, inpMap)
 
     return "Loop limit reached!"
 
