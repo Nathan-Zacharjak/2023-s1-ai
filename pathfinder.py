@@ -99,7 +99,9 @@ def ChooseNextConsideredNode(search, fringe, consideredNode):
     # Now from all these equally optimal nodes,
     # apply the "up, down, left right" priority to resolve a tie,
     # if there is more than 1 node in the potential nextNodes[]
-    while len(nextNodes) > 1:
+    loopCount = 0
+    while (len(nextNodes) > 1) and (loopCount <= 10000):
+        loopCount += 1
         upNodes = set()
         downNodes = set()
         leftNodes = set()
@@ -125,6 +127,8 @@ def ChooseNextConsideredNode(search, fringe, consideredNode):
 
     if len(nextNodes) == 0:
         return "nextNodes set is empty!"
+    elif loopCount == 10000:
+        return "loopCount limit reached!"
     else:
         return nextNodes.pop()
 
