@@ -80,7 +80,7 @@ def GraphSearch(search, size, start, end, inpMap):
     closed = set()
     depth = 0
     fringe = []
-    fringe = GetFringe(search, closed, size, start, inpMap, depth, fringe)
+    fringe = GetFringe(search, closed, size, start, inpMap, fringe)
 
     while depth < 10000:
         depth += 1
