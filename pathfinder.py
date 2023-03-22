@@ -21,7 +21,7 @@ end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
 # Takes a node and returns all nodes connected to it
 # that aren't closed
-def ExpandNode(closed, node, size, inpMap):
+def ExpandNode(closed, node, size, inpMap, fringe, expandNodes):
     nodes = []
     x = node[0]
     y = node[1]
@@ -44,6 +44,10 @@ def ExpandNode(closed, node, size, inpMap):
             continue
         if inpMap[xPos][yPos] == "X":
             continue
+        if pos in fringe:
+            continue
+        if pos in expandNodes:
+            continue
 
         nodes.append(pos)
 
@@ -53,9 +57,12 @@ def ExpandNode(closed, node, size, inpMap):
 def GetFringe(search, closed, size, start, inpMap, fringe, depth):
     if depth == 0:
         return [start]
-    if depth == 1:
-        fringe = ExpandNode(closed, start, size, inpMap)
-        return fringe
+    
+    expandNodes = []
+    for node in fringe:
+        expandNodes.update(ExpandNode(closed, node, size, inpMap, fringe, expandNodes))
+
+    fringe.extend(expandNodes)
 
     return fringe
 
