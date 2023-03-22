@@ -59,7 +59,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode):
             continue
         if map[xPos][yPos] == "X":
             continue
-        if closed[(xPos, yPos)]:
+        if (xPos, yPos) in closed:
             continue
 
         foundDupeNode = False
