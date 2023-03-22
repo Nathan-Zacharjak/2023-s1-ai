@@ -65,20 +65,13 @@ def ExpandFringe(search, closed, size, inpMap, fringe):
     return fringe
 
 def GeneratePath(inpMap, close, start, end):
-    # current node = start
-    # outMap = inpMap
-    # loop:
-    # If the current node is the end,
-    # star it and return outMap
-    # else:
-    # Find node above current node
-    # If there is a node above, and it is in closed, and is not a star
-    # Star current node
-    # Current node = above node
-    # Else if there is a node below, and it is in closed... 
-    # ...
-    # Else if there is no node anywhere, remove it from closed and start again
-    # Else return error string
+    outMap = []
+    # Need to make convert the closed set into a tree,
+    # and add nodes to the tree as you close them
+    # Then in this function, traverse the tree
+    # from the end node to the start,
+    # making sure you are always going up a depth level
+    return outMap
 
 # Returns true if the current node is the end node and
 # sets off the generation of the path
