@@ -49,15 +49,19 @@ def ExpandNode(closed, node, size, inpMap):
 
     return nodes
 
-# Returns the fringe from a specified depth
-def GetFringe(search, closed, size, start, inpMap, fringe):
-    
+# Returns the fringe from the current depth
+def GetFringe(search, closed, size, start, inpMap, fringe, depth):
+    if depth == 0:
+        return [start]
+    if depth == 1:
+        fringe = ExpandNode(closed, start, size, inpMap)
+        return fringe
 
     return fringe
 
 # Marks off a node as explored by changing it to a "*"
 # Returns true if the current node is the goal node
-def GoalTest(currNode, outMap, end):
+def CheckFringe(currNode, outMap, end):
     isGoalNode = False
     if currNode == end:
         isGoalNode = True
@@ -80,21 +84,15 @@ def GraphSearch(search, size, start, end, inpMap):
     closed = set()
     depth = 0
     fringe = []
-    fringe = GetFringe(search, closed, size, start, inpMap, fringe)
+    fringe = GetFringe(search, closed, size, start, inpMap, fringe, depth)
 
     while depth < 10000:
         depth += 1
 
-        if type(fringe) == str:
-            return fringe
-        elif len(fringe) == 0:
+        if len(fringe) == 0:
             return "Fringe empty"
-        
-        # Remove the current node from the fringe,
-        # and test if it is the end node
-        currNode = fringe.pop(0)
 
-        outMap, goalReached = GoalTest(currNode, outMap, end)
+        outMap, goalReached = CheckFringe(currNode, outMap, end)
         if goalReached:
             return outMap
         
