@@ -43,10 +43,10 @@ def ExpandFringe(closed, size, map, fringe, consideredNode):
     y = consideredNode[1]
     consideredNodeDepth = consideredNode[3]
 
-    up = (x,y-1,(x,y),consideredNodeDepth + 1)
-    down = (x,y+1,(x,y),consideredNodeDepth + 1)
-    left = (x-1,y,(x,y),consideredNodeDepth + 1)
-    right = (x+1,y,(x,y),consideredNodeDepth + 1)
+    up = (x,y-1,(x,y),consideredNodeDepth + 1, "up")
+    down = (x,y+1,(x,y),consideredNodeDepth + 1, "down")
+    left = (x-1,y,(x,y),consideredNodeDepth + 1, "left")
+    right = (x+1,y,(x,y),consideredNodeDepth + 1, "right")
     potentialExpand = [up,down,left,right]
 
     for node in potentialExpand:
@@ -73,9 +73,61 @@ def ExpandFringe(closed, size, map, fringe, consideredNode):
         fringe.add(node)
 
     return fringe
+
+# Returns the next node to expand based on the fringe
+# and the type of search we are using
+def ChooseNextConsideredNode(search, fringe, consideredNode):
+    # Take the first fringe node's depth to start with
+    minDepth = 10000
+    nextNodes = set()
+    for node in fringe:
+        minDepth = node[3]
+        break
     
-def ChooseNextConsideredNode(search, fringe):
-    return
+    # Now find the smallest depth out of all the nodes
+    for node in fringe:
+        depth = node[3]
+        if depth < minDepth:
+            minDepth = depth
+
+    # Now find all nodes that have this depth
+    for node in fringe:
+        depth = node[3]
+        if depth == minDepth:
+            nextNodes.add(node)
+    
+    # Now from all these equally optimal nodes,
+    # apply the "up, down, left right" priority to resolve a tie,
+    # if there is more than 1 node in the potential nextNodes[]
+    while len(nextNodes) > 1:
+        upNodes = set()
+        downNodes = set()
+        leftNodes = set()
+        rightNodes = set()
+        for node in nextNodes:
+            if node[4] == "up":
+                upNodes.add(node)
+            elif node[4] == "down":
+                downNodes.add(node)
+            elif node[4] == "left":
+                leftNodes.add(node)
+            elif node[4] == "right":
+                rightNodes.add(node)
+        
+        if len(upNodes) > 0:
+            nextNodes = upNodes
+        elif len(downNodes) > 0:
+            nextNodes = downNodes
+        elif len(leftNodes) > 0:
+            nextNodes = leftNodes
+        elif len(rightNodes) > 0:
+            nextNodes = rightNodes
+
+    if len(nextNodes) == 0:
+        return "nextNodes set is empty!"
+    else:
+        return nextNodes.pop()
+
 
 # Takes a search type, a grid to search, and a start and end
 # and returns a path through the grid from the start
@@ -83,7 +135,7 @@ def ChooseNextConsideredNode(search, fringe):
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, map):
     # (X, Y, Parent, Depth)
-    start = (start[0] - 1, start[1] - 1, "nil", 0)
+    start = (start[0] - 1, start[1] - 1, "start", 0, "start")
     end = (end[0] - 1, end[1] - 1)
     closed = {}
     fringe = {start}
@@ -103,7 +155,10 @@ def GraphSearch(search, size, start, end, map):
         if len(fringe) == 0:
             return "Fringe empty"
         
-        consideredNode = ChooseNextConsideredNode(search, fringe)
+        consideredNode = ChooseNextConsideredNode(search, fringe, consideredNode)
+        if type(consideredNode) == str:
+            return consideredNode
+        
         nodesConsidered += 1
 
     return "Loop limit reached!"
