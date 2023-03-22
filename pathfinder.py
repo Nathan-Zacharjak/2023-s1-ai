@@ -17,7 +17,7 @@ inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
 start = (inpStart[0] - 1, inpStart[1] - 1)
 end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
-def GetFringe(search, closed, size, currNode):
+def GetFringe(search, closed, size, currNode, inpMap):
     fringe = []
     if currNode in closed:
         return "Tried to create fringe with currNode in closed!"
@@ -36,12 +36,16 @@ def GetFringe(search, closed, size, currNode):
     for pos in potentialFringe:
         xPos = pos[0]
         yPos = pos[1]
+
         if xPos < 0 or xPos > size[0] - 1:
             continue
         if yPos < 0 or yPos > size[0] - 1:
             continue
         if pos in closed:
             continue
+        if inpMap[xPos][yPos] == "X":
+            continue
+
         fringe.append(pos)
 
     return fringe
@@ -53,7 +57,7 @@ def GoalTest(search, currNode, inpMap):
 def GraphSearch(search, size, start, end, inpMap):
     outMap = inpMap
     closed = {}
-    fringe = GetFringe(search, closed, size, start)
+    fringe = GetFringe(search, closed, size, start, inpMap)
     loopCount = 0
 
     while loopCount < 10000:
@@ -66,10 +70,10 @@ def GraphSearch(search, size, start, end, inpMap):
         
         # Remove the current node from the fringe,
         # and test if it is the end node
-        currNode = fringe.pop(0)
+        # currNode = fringe.pop(0)
 
-        if GoalTest(search, currNode, inpMap):
-            return outMap
+        # if GoalTest(search, currNode, inpMap):
+            # return outMap
         
         # if not (state[currNode] in closed):
         #     closed.add(state[currNode])
