@@ -21,7 +21,7 @@ end = (inpEnd[0] - 1, inpEnd[1] - 1)
 
 # Takes a node and returns all nodes connected to it
 # that aren't closed
-def ExpandNode(closed, node, size, inpMap, fringe, expandNodes):
+def ConsideredNode(closed, node, size, inpMap, fringe, consideredNodes):
     nodes = []
     x = node[0]
     y = node[1]
@@ -46,66 +46,78 @@ def ExpandNode(closed, node, size, inpMap, fringe, expandNodes):
             continue
         if pos in fringe:
             continue
-        if pos in expandNodes:
+        if pos in consideredNodes:
             continue
 
         nodes.append(pos)
 
     return nodes
 
-# Returns the fringe from the current depth
-def GetFringe(search, closed, size, start, inpMap, fringe, depth):
-    if depth == 0:
-        return [start]
-    
-    expandNodes = []
+# Returns the expanded fringe from the current one,
+# one iteration of depth deeper
+def ExpandFringe(search, closed, size, inpMap, fringe):
+    consideredNodes = []
     for node in fringe:
-        expandNodes.update(ExpandNode(closed, node, size, inpMap, fringe, expandNodes))
+        consideredNodes.update(ConsideredNode(closed, node, size, inpMap, fringe, consideredNodes))
 
-    fringe.extend(expandNodes)
+    fringe.extend(consideredNodes)
 
     return fringe
 
-# Marks off a node as explored by changing it to a "*"
-# Returns true if the current node is the goal node
-def CheckFringe(currNode, outMap, end):
-    isGoalNode = False
+def GeneratePath(inpMap, close, start, end):
+    # current node = start
+    # outMap = inpMap
+    # loop:
+    # If the current node is the end,
+    # star it and return outMap
+    # else:
+    # Find node above current node
+    # If there is a node above, and it is in closed, and is not a star
+    # Star current node
+    # Current node = above node
+    # Else if there is a node below, and it is in closed... 
+    # ...
+    # Else if there is no node anywhere, remove it from closed and start again
+    # Else return error string
+
+# Returns true if the current node is the end node and
+# sets off the generation of the path
+def CheckIfEndNode(currNode, start, end, inpMap, closed):
+    isEnd = False
+
     if currNode == end:
-        isGoalNode = True
+        isEnd = True
+        closed.add(currNode)
+        outMap = GeneratePath(inpMap, closed, start, end)
 
-    outMap[currNode[0]][currNode[1]] = "*"
-
-    return outMap, isGoalNode
-
-def SelectNextNode(fringe, search):
-
-            
-    return nextNode
+        return outMap, isEnd
+    else:
+        return None, isEnd
 
 # Takes a search type, a grid to search, and a start and end
 # and returns a path through the grid from the start
 # to the goal by making "*"s along the path it found.
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, inpMap):
-    outMap = inpMap
     closed = set()
-    depth = 0
-    fringe = []
-    fringe = GetFringe(search, closed, size, start, inpMap, fringe, depth)
+    fringe = [start]
+    nodesConsidered = 1
+    consideredNode = start
 
-    while depth < 10000:
-        depth += 1
+    while nodesConsidered < 10000:
+        isEnd, outMap = CheckIfEndNode(consideredNode, start, end, inpMap, closed)
+        if isEnd:
+            return outMap
+        
+        closed.add(consideredNode)
+
+        fringe = ExpandFringe(closed, size, inpMap, fringe, consideredNode)
 
         if len(fringe) == 0:
             return "Fringe empty"
-
-        outMap, goalReached = CheckFringe(currNode, outMap, end)
-        if goalReached:
-            return outMap
         
-        closed.add(currNode)
-        currNode = SelectNextNode(fringe, search)
-        fringe = GetFringe(closed, size, start, inpMap)
+        consideredNode = ChooseNextConsideredNode(search, fringe)
+        nodesConsidered += 1
 
     return "Loop limit reached!"
 
