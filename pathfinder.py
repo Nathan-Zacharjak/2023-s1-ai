@@ -46,7 +46,7 @@ def GeneratePath(map, closed, start, end):
 def CheckIfEndNode(consideredNode, start, end, map, closed):
     rowPos = consideredNode[0]
     colPos = consideredNode[1]
-    print("is consideredNode end:", consideredNode, end, rowPos == end[0], colPos == end[1])
+    print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
 
     if (rowPos == end[0]) and (colPos == end[1]):
         outMap = GeneratePath(map, closed, start, end)
@@ -90,13 +90,13 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
 
         foundDupeNode = False
         for fringeNode in fringe:
-            if (fringeNode[0] == rowPos) and (fringeNode[1] == colPos):
+            if (fringeNode[0] == rowPos) and (fringeNode[1] == colPos) and (fringeNode[2] == (row, col)):
                 foundDupeNode = True
                 break
         if foundDupeNode:
             continue
 
-        fringe.add(node)
+        fringe.append(node)
 
     print("Fringe:", fringe)
     return fringe, fringeIndex
@@ -178,7 +178,7 @@ def GraphSearch(search, size, start, end, map):
     start = (start[0] - 1, start[1] - 1, "start", 0, "start")
     end = (end[0] - 1, end[1] - 1)
     closed = {}
-    fringe = {start}
+    fringe = [start]
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
