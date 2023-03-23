@@ -3,18 +3,21 @@ import numpy as np
 # Emulating an input from console
 inpSearch = "bfs"
 inpStart = (1,1)
-inpEnd = (10,10)
-inpSize = (10,10)
-inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+inpEnd = (3,3)
+inpSize = (3,3)
+inpMap = [[1, 1, "X"],
+        [1, 1, 1],
+        ["X", 1, 1]]
+# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, closed, start, end):
     loopCount = 0
@@ -62,14 +65,14 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
     row = consideredNode[0]
     col = consideredNode[1]
     consideredNodeDepth = consideredNode[3]
-
-    up = (row-1,col,(row,col),consideredNodeDepth + 1, "up", fringeIndex)
+        
+    up = (row-1,col,(row,col,consideredNode[4]),consideredNodeDepth + 1, "up", fringeIndex)
     fringeIndex += 1
-    down = (row+1,col,(row,col),consideredNodeDepth + 1, "down", fringeIndex)
+    down = (row+1,col,(row,col,consideredNode[4]),consideredNodeDepth + 1, "down", fringeIndex)
     fringeIndex += 1
-    left = (row,col-1,(row,col),consideredNodeDepth + 1, "left", fringeIndex)
+    left = (row,col-1,(row,col,consideredNode[4]),consideredNodeDepth + 1, "left", fringeIndex)
     fringeIndex += 1
-    right = (row,col+1,(row,col),consideredNodeDepth + 1, "right", fringeIndex)
+    right = (row,col+1,(row,col,consideredNode[4]),consideredNodeDepth + 1, "right", fringeIndex)
     fringeIndex += 1
     potentialExpand = [up,down,left,right]
 
@@ -132,13 +135,14 @@ def ChooseNextConsideredNode(fringe, map):
     leftNodes = []
     rightNodes = []
     for node in nextNodes:
-        if node[4] == "up":
+        parentDir = node[2][2]
+        if parentDir == "up":
             upNodes.append(node)
-        elif node[4] == "down":
+        elif parentDir == "down":
             downNodes.append(node)
-        elif node[4] == "left":
+        elif parentDir == "left":
             leftNodes.append(node)
-        elif node[4] == "right":
+        elif parentDir == "right":
             rightNodes.append(node)
         
     if len(upNodes) > 0:
@@ -175,7 +179,7 @@ def ChooseNextConsideredNode(fringe, map):
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, map):
     # (row, col, Parent, Depth)
-    start = (start[0] - 1, start[1] - 1, "start", 0, "start")
+    start = (start[0] - 1, start[1] - 1, "startParent", 0, "startDir", -1, "startParentDir")
     end = (end[0] - 1, end[1] - 1)
     closed = {}
     fringe = [start]
