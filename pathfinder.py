@@ -3,7 +3,7 @@ import numpy as np
 # Emulating an input from console
 inpSearch = "bfs"
 inpStart = (1,1)
-inpEnd = (9,9)
+inpEnd = (10,10)
 inpSize = (10,10)
 inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
@@ -17,9 +17,29 @@ inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, closed, start, end):
-    outMap = []
-    # Use closed set as dicionary, index by end, get its parent, index parent, etc. until start is reached and star along the way
-    return outMap
+    loopCount = 0
+    currentNode = end
+
+    while loopCount < 10000:
+        loopCount += 1
+
+        # Current node stuff
+        row = currentNode[0]
+        col = currentNode[1]
+        map[row][col] = "*"
+        if (row == start[0]) and (col == start[1]):
+            return map
+
+        # Parent node stuff
+        parentNode = closed[(row, col)]
+        parentRow = parentNode[0]
+        parentCol = parentNode[1]
+        currentNode = (parentRow, parentCol)
+
+    if loopCount == 10000:
+        return "Generate path loop count limit reached!"
+    
+    return map
 
 # Returns true if the current node is the end node and
 # sets off the generation of the path
