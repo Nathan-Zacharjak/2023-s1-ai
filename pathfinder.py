@@ -135,14 +135,14 @@ def ChooseNextConsideredNode(fringe, map):
     leftNodes = []
     rightNodes = []
     for node in nextNodes:
-        parentDir = node[2][2]
-        if parentDir == "up":
+        dir = node[4]
+        if dir == "up":
             upNodes.append(node)
-        elif parentDir == "down":
+        elif dir == "down":
             downNodes.append(node)
-        elif parentDir == "left":
+        elif dir == "left":
             leftNodes.append(node)
-        elif parentDir == "right":
+        elif dir == "right":
             rightNodes.append(node)
         
     if len(upNodes) > 0:
@@ -153,6 +153,30 @@ def ChooseNextConsideredNode(fringe, map):
         nextNodes = leftNodes
     elif len(rightNodes) > 0:
         nextNodes = rightNodes
+
+    # upNodes = []
+    # downNodes = []
+    # leftNodes = []
+    # rightNodes = []
+    # for node in nextNodes:
+    #     parentDir = node[2][2]
+    #     if parentDir == "up":
+    #         upNodes.append(node)
+    #     elif parentDir == "down":
+    #         downNodes.append(node)
+    #     elif parentDir == "left":
+    #         leftNodes.append(node)
+    #     elif parentDir == "right":
+    #         rightNodes.append(node)
+        
+    # if len(upNodes) > 0:
+    #     nextNodes = upNodes
+    # elif len(downNodes) > 0:
+    #     nextNodes = downNodes
+    # elif len(leftNodes) > 0:
+    #     nextNodes = leftNodes
+    # elif len(rightNodes) > 0:
+    #     nextNodes = rightNodes
 
     print("optimal nodes:", nextNodes)
     if len(nextNodes) == 0:
