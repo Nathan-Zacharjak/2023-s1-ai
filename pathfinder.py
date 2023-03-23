@@ -61,15 +61,19 @@ def CheckIfEndNode(consideredNode, start, end, map, closed):
 # Takes a node and finds all nodes connected to it,
 # that can be added to the fringe,
 # and returns the extended fringe
-def ExpandFringe(closed, size, map, fringe, consideredNode):
+def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
     row = consideredNode[0]
     col = consideredNode[1]
     consideredNodeDepth = consideredNode[3]
 
-    up = (row-1,col,(row,col),consideredNodeDepth + 1, "up")
-    down = (row+1,col,(row,col),consideredNodeDepth + 1, "down")
-    left = (row,col-1,(row,col),consideredNodeDepth + 1, "left")
-    right = (row,col+1,(row,col),consideredNodeDepth + 1, "right")
+    up = (row-1,col,(row,col),consideredNodeDepth + 1, "up", fringeIndex)
+    fringeIndex += 1
+    down = (row+1,col,(row,col),consideredNodeDepth + 1, "down", fringeIndex)
+    fringeIndex += 1
+    left = (row,col-1,(row,col),consideredNodeDepth + 1, "left", fringeIndex)
+    fringeIndex += 1
+    right = (row,col+1,(row,col),consideredNodeDepth + 1, "right", fringeIndex)
+    fringeIndex += 1
     potentialExpand = [up,down,left,right]
 
     print("Considered node:", consideredNode)
@@ -98,7 +102,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode):
         fringe.add(node)
 
     print("Fringe:", fringe)
-    return fringe
+    return fringe, fringeIndex
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
@@ -153,7 +157,19 @@ def ChooseNextConsideredNode(fringe):
     if len(nextNodes) == 0:
         return "nextNodes set is empty!"
     else:
-        return nextNodes.pop()
+        # Always pick the node with the lowest index as the indexes are always put in order
+        # of the up, down, left, right rule
+        lowestIndex = None
+        nextNode = None
+        for node in nextNodes:
+            lowestIndex = node[5]
+            nextNode = node
+            break
+        for node in nextNodes:
+            if node[5] < lowestIndex:
+                lowestIndex = node[5]
+                nextNode = node
+        return nextNode
 
 
 # Takes a search type, a grid to search, and a start and end
@@ -168,6 +184,7 @@ def GraphSearch(search, size, start, end, map):
     fringe = {start}
     nodesConsidered = 1
     consideredNode = start
+    fringeIndex = 0
 
     while nodesConsidered <= 10000:
         print("Nodes considered:", nodesConsidered)
@@ -178,7 +195,7 @@ def GraphSearch(search, size, start, end, map):
         if isEnd:
             return outMap
 
-        fringe = ExpandFringe(closed, size, map, fringe, consideredNode)
+        fringe, fringeIndex = ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex)
 
         if len(fringe) == 0:
             return "Fringe empty"
