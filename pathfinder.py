@@ -195,4 +195,9 @@ if type(result) == str:
     print(result)
 else:
     for row in result:
-        print(row)
+        printRow = ""
+        for col in row:
+            stringCol = str(col)
+            printRow = printRow + " " + stringCol
+        # Removing the first unneeded space in each row
+        print(printRow[1:])
