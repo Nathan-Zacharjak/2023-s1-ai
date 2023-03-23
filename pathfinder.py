@@ -3,6 +3,8 @@ import numpy as np
 # Emulating an input from console
 inpSearch = "bfs"
 inpStart = (1,1)
+# inpEnd = (10,10)
+# inpSize = (10,10)
 inpEnd = (3,3)
 inpSize = (3,3)
 inpMap = [[1, 1, "X"],
