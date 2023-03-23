@@ -3,10 +3,10 @@ import numpy as np
 # Emulating an input from console
 inpSearch = "bfs"
 inpStart = (1,1)
-inpEnd = (10,10)
+inpEnd = (9,9)
 inpSize = (10,10)
-inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
-        [3, 4, 1, 1, 1, 1, 1, 5, 8, 8],
+inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
@@ -16,55 +16,57 @@ inpMap = [[1, 2, 1, 1, 1, 1, 4, 7, 8, "X"],
         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
-def GeneratePath(map, close, start, end):
+def GeneratePath(map, closed, start, end):
     outMap = []
     # Use closed set as dicionary, index by end, get its parent, index parent, etc. until start is reached and star along the way
     return outMap
 
 # Returns true if the current node is the end node and
 # sets off the generation of the path
-def CheckIfEndNode(currNode, start, end, map, closed):
-    isEnd = False
+def CheckIfEndNode(consideredNode, start, end, map, closed):
+    rowPos = consideredNode[0]
+    colPos = consideredNode[1]
+    print("is consideredNode end:", consideredNode, end, rowPos == end[0], colPos == end[1])
 
-    if currNode == end:
-        isEnd = True
-        closed.add(currNode)
+    if (rowPos == end[0]) and (colPos == end[1]):
         outMap = GeneratePath(map, closed, start, end)
 
-        return outMap, isEnd
+        return outMap, True
     else:
-        return None, isEnd
+        return None, False
 
 # Takes a node and finds all nodes connected to it,
 # that can be added to the fringe,
 # and returns the extended fringe
 def ExpandFringe(closed, size, map, fringe, consideredNode):
-    x = consideredNode[0]
-    y = consideredNode[1]
+    row = consideredNode[0]
+    col = consideredNode[1]
     consideredNodeDepth = consideredNode[3]
 
-    up = (x,y-1,(x,y),consideredNodeDepth + 1, "up")
-    down = (x,y+1,(x,y),consideredNodeDepth + 1, "down")
-    left = (x-1,y,(x,y),consideredNodeDepth + 1, "left")
-    right = (x+1,y,(x,y),consideredNodeDepth + 1, "right")
+    up = (row-1,col,(row,col),consideredNodeDepth + 1, "up")
+    down = (row+1,col,(row,col),consideredNodeDepth + 1, "down")
+    left = (row,col-1,(row,col),consideredNodeDepth + 1, "left")
+    right = (row,col+1,(row,col),consideredNodeDepth + 1, "right")
     potentialExpand = [up,down,left,right]
 
+    print("Considered node:", consideredNode)
+    print("Potential expand:", potentialExpand)
     for node in potentialExpand:
-        xPos = node[0]
-        yPos = node[1]
+        rowPos = node[0]
+        colPos = node[1]
 
-        if xPos < 0 or xPos > size[0] - 1:
+        if rowPos < 0 or rowPos > size[0] - 1:
             continue
-        if yPos < 0 or yPos > size[0] - 1:
+        if colPos < 0 or colPos > size[0] - 1:
             continue
-        if map[xPos][yPos] == "X":
+        if map[rowPos][colPos] == "X":
             continue
-        if (xPos, yPos) in closed:
+        if (rowPos, colPos) in closed:
             continue
 
         foundDupeNode = False
         for fringeNode in fringe:
-            if (fringeNode[0] == xPos) and (fringeNode[1] == yPos):
+            if (fringeNode[0] == rowPos) and (fringeNode[1] == colPos):
                 foundDupeNode = True
                 break
         if foundDupeNode:
@@ -72,11 +74,12 @@ def ExpandFringe(closed, size, map, fringe, consideredNode):
 
         fringe.add(node)
 
+    print("Fringe:", fringe)
     return fringe
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
-def ChooseNextConsideredNode(search, fringe, consideredNode):
+def ChooseNextConsideredNode(fringe):
     # Take the first fringe node's depth to start with
     minDepth = 10000
     nextNodes = set()
@@ -95,7 +98,7 @@ def ChooseNextConsideredNode(search, fringe, consideredNode):
         depth = node[3]
         if depth == minDepth:
             nextNodes.add(node)
-    
+    print("optimal nodes:", nextNodes)
     # Now from all these equally optimal nodes,
     # apply the "up, down, left right" priority to resolve a tie,
     # if there is more than 1 node in the potential nextNodes[]
@@ -125,6 +128,7 @@ def ChooseNextConsideredNode(search, fringe, consideredNode):
         elif len(rightNodes) > 0:
             nextNodes = rightNodes
 
+    print("Next considered node:", nextNodes)
     if len(nextNodes) == 0:
         return "nextNodes set is empty!"
     elif loopCount == 10000:
@@ -138,7 +142,7 @@ def ChooseNextConsideredNode(search, fringe, consideredNode):
 # to the goal by making "*"s along the path it found.
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, map):
-    # (X, Y, Parent, Depth)
+    # (row, col, Parent, Depth)
     start = (start[0] - 1, start[1] - 1, "start", 0, "start")
     end = (end[0] - 1, end[1] - 1)
     closed = {}
@@ -146,11 +150,12 @@ def GraphSearch(search, size, start, end, map):
     nodesConsidered = 1
     consideredNode = start
 
-    while nodesConsidered < 10000:
+    while nodesConsidered <= 10000:
+        print("Nodes considered:", nodesConsidered)
         closed[(consideredNode[0], consideredNode[1])] = consideredNode[2]
         fringe.remove(consideredNode)
 
-        isEnd, outMap = CheckIfEndNode(consideredNode, start, end, map, closed)
+        outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, closed)
         if isEnd:
             return outMap
 
@@ -159,10 +164,10 @@ def GraphSearch(search, size, start, end, map):
         if len(fringe) == 0:
             return "Fringe empty"
         
-        consideredNode = ChooseNextConsideredNode(search, fringe, consideredNode)
+        consideredNode = ChooseNextConsideredNode(fringe)
         if type(consideredNode) == str:
             return consideredNode
-        
+        print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
