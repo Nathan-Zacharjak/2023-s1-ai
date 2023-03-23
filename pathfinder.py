@@ -102,37 +102,33 @@ def ChooseNextConsideredNode(fringe):
     # Now from all these equally optimal nodes,
     # apply the "up, down, left right" priority to resolve a tie,
     # if there is more than 1 node in the potential nextNodes[]
-    loopCount = 0
-    while (len(nextNodes) > 1) and (loopCount <= 10000):
-        loopCount += 1
-        upNodes = set()
-        downNodes = set()
-        leftNodes = set()
-        rightNodes = set()
-        for node in nextNodes:
-            if node[4] == "up":
-                upNodes.add(node)
-            elif node[4] == "down":
-                downNodes.add(node)
-            elif node[4] == "left":
-                leftNodes.add(node)
-            elif node[4] == "right":
-                rightNodes.add(node)
+
+    upNodes = set()
+    downNodes = set()
+    leftNodes = set()
+    rightNodes = set()
+    for node in nextNodes:
+        if node[4] == "up":
+            upNodes.add(node)
+        elif node[4] == "down":
+            downNodes.add(node)
+        elif node[4] == "left":
+            leftNodes.add(node)
+        elif node[4] == "right":
+            rightNodes.add(node)
         
-        if len(upNodes) > 0:
-            nextNodes = upNodes
-        elif len(downNodes) > 0:
-            nextNodes = downNodes
-        elif len(leftNodes) > 0:
-            nextNodes = leftNodes
-        elif len(rightNodes) > 0:
-            nextNodes = rightNodes
+    if len(upNodes) > 0:
+        nextNodes = upNodes
+    elif len(downNodes) > 0:
+        nextNodes = downNodes
+    elif len(leftNodes) > 0:
+        nextNodes = leftNodes
+    elif len(rightNodes) > 0:
+        nextNodes = rightNodes
 
     print("Next considered node:", nextNodes)
     if len(nextNodes) == 0:
         return "nextNodes set is empty!"
-    elif loopCount == 10000:
-        return "loopCount limit reached!"
     else:
         return nextNodes.pop()
 
