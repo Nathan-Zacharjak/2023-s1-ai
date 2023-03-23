@@ -103,10 +103,10 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
-def ChooseNextConsideredNode(fringe):
+def ChooseNextConsideredNode(fringe, map):
     # Take the first fringe node's depth to start with
     minDepth = 10000
-    nextNodes = set()
+    nextNodes = []
     for node in fringe:
         minDepth = node[3]
         break
@@ -121,25 +121,25 @@ def ChooseNextConsideredNode(fringe):
     for node in fringe:
         depth = node[3]
         if depth == minDepth:
-            nextNodes.add(node)
-    print("optimal nodes:", nextNodes)
+            nextNodes.append(node)
+
     # Now from all these equally optimal nodes,
     # apply the "up, down, left right" priority to resolve a tie,
     # if there is more than 1 node in the potential nextNodes[]
 
-    upNodes = set()
-    downNodes = set()
-    leftNodes = set()
-    rightNodes = set()
+    upNodes = []
+    downNodes = []
+    leftNodes = []
+    rightNodes = []
     for node in nextNodes:
         if node[4] == "up":
-            upNodes.add(node)
+            upNodes.append(node)
         elif node[4] == "down":
-            downNodes.add(node)
+            downNodes.append(node)
         elif node[4] == "left":
-            leftNodes.add(node)
+            leftNodes.append(node)
         elif node[4] == "right":
-            rightNodes.add(node)
+            rightNodes.append(node)
         
     if len(upNodes) > 0:
         nextNodes = upNodes
@@ -150,9 +150,9 @@ def ChooseNextConsideredNode(fringe):
     elif len(rightNodes) > 0:
         nextNodes = rightNodes
 
-    print("Next considered node:", nextNodes)
+    print("optimal nodes:", nextNodes)
     if len(nextNodes) == 0:
-        return "nextNodes set is empty!"
+        return "nextNodes list is empty!"
     else:
         # Always pick the node with the lowest index as the indexes are always put in order
         # of the up, down, left, right rule
@@ -166,8 +166,8 @@ def ChooseNextConsideredNode(fringe):
             if node[5] < lowestIndex:
                 lowestIndex = node[5]
                 nextNode = node
+        print("Next considered node:", nextNode)
         return nextNode
-
 
 # Takes a search type, a grid to search, and a start and end
 # and returns a path through the grid from the start
@@ -197,7 +197,7 @@ def GraphSearch(search, size, start, end, map):
         if len(fringe) == 0:
             return "Fringe empty"
         
-        consideredNode = ChooseNextConsideredNode(fringe)
+        consideredNode = ChooseNextConsideredNode(fringe, map)
         if type(consideredNode) == str:
             return consideredNode
         print("===================")
@@ -218,3 +218,15 @@ else:
             printRow = printRow + " " + stringCol
         # Removing the first unneeded space in each row
         print(printRow[1:])
+
+inpMap2 = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+        [8, 115, 1, 1, 1, 1, 1, 1, 1, 1],
+        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+# print(inpMap2[8][1])
