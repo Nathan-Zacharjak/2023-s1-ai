@@ -216,7 +216,7 @@ def GraphSearch(search, size, start, end, map):
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
-    maxLoops = 10000
+    maxLoops = 10000000000
 
     while nodesConsidered <= maxLoops:
         # print("Nodes considered:", nodesConsidered)
