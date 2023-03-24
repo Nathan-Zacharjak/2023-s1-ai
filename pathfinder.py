@@ -1,7 +1,7 @@
 import numpy as np
 
 # Emulating an input from console
-inpSearch = "bfs"
+inpSearch = "ucs"
 inpStart = (1,1)
 inpEnd = (10,10)
 inpSize = (10,10)
@@ -75,8 +75,6 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
     fringeIndex += 1
     potentialExpand = [up,down,left,right]
 
-    # print("Considered node:", consideredNode)
-    # print("Potential expand:", potentialExpand)
     for node in potentialExpand:
         rowPos = node[0]
         colPos = node[1]
@@ -89,14 +87,6 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
             continue
         if (rowPos,colPos) in closed:
             continue
-
-        # foundDupeNode = False
-        # for fringeNode in fringe:
-        #     if (fringeNode[0] == rowPos) and (fringeNode[1] == colPos) and (fringeNode[2] == (row, col)):
-        #         foundDupeNode = True
-        #         break
-        # if foundDupeNode:
-        #     continue
 
         fringe.append(node)
 
@@ -171,6 +161,7 @@ def GraphSearch(search, size, start, end, map):
 
     while nodesConsidered <= maxLoops:
         print("Nodes considered:", nodesConsidered)
+        # Remove the node from the fringe and consider if it is the end node
         fringe.remove(consideredNode)
  
         outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, maxLoops)
@@ -180,12 +171,16 @@ def GraphSearch(search, size, start, end, map):
         # Close a node as it is searched
         closed.add((consideredNode[0], consideredNode[1]))
 
+        # If it isn't the end, add its neighbors to the fringe
         fringe, fringeIndex = ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex)
 
+        # If there is no fringe, there is no valid path
         if len(fringe) == 0:
             return "Fringe empty"
         
+        # If there is a fringe, choose the next node to check if its the end
         consideredNode = ChooseNextConsideredNode(fringe, map, maxLoops, search)
+        # (And if something went wrong with that function return an error string)
         if type(consideredNode) == str:
             return consideredNode
         print("===================")
@@ -193,9 +188,8 @@ def GraphSearch(search, size, start, end, map):
 
     return "Loop limit reached!"
 
-# Prints the result
+# Runs the program and prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap)
-# print("Result:")
 if type(result) == str:
     print(result)
 else:
