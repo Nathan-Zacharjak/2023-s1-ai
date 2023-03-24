@@ -221,7 +221,7 @@ def GraphSearch(search, size, start, end, map):
     consideredNode = start
     fringeIndex = 0
 
-    while nodesConsidered <= 8:
+    while nodesConsidered <= 1000:
         print("Nodes considered:", nodesConsidered)
         # parents[consideredNode] = previousNode
         fringe.remove(consideredNode)
