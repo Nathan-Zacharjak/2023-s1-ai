@@ -5,11 +5,12 @@ inpSearch = "bfs"
 inpStart = (1,1)
 inpEnd = (10,10)
 inpSize = (10,10)
-# inpEnd = (3,3)
-# inpSize = (3,3)
-# inpMap = [[1, 1, "X"],
-#         [1, 1, 1],
-#         ["X", 1, 1]]
+# inpEnd = (4,4)
+# inpSize = (4,4)
+# inpMap = [[1, 1, 1, "X"],
+#         [1, 1, 1, 1],
+#         [1, 1, 1, 1],
+#         ["X", 1, 1, 1]]
 inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
@@ -48,7 +49,7 @@ def GeneratePath(map, start, consideredNode, maxLoops):
 def CheckIfEndNode(consideredNode, start, end, map, maxLoops):
     rowPos = consideredNode[0]
     colPos = consideredNode[1]
-    print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
+    # print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
 
     if (rowPos == end[0]) and (colPos == end[1]):
         outMap = GeneratePath(map, start, consideredNode, maxLoops)
@@ -81,9 +82,6 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
         rowPos = node[0]
         colPos = node[1]
 
-        # print("Node:", node)
-        # print("RowPos:", rowPos < 0, rowPos > size[0] - 1)
-        # print("ColPos:", colPos < 0, colPos > size[0] - 1)
         if (rowPos < 0) or (rowPos > size[0] - 1):
             continue
         if (colPos < 0) or (colPos > size[0] - 1):
@@ -103,7 +101,6 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
 
         fringe.append(node)
 
-    # print("Fringe:", fringe)
     return fringe, fringeIndex
 
 # Returns the next node to expand based on the fringe
@@ -203,7 +200,6 @@ def ChooseNextConsideredNode(fringe, map, maxLoops):
             lowestIndex = node[5]
             nextNode = node
         
-    # print("Next considered node:", nextNode)
     return nextNode
 
 # Takes a search type, a grid to search, and a start and end
@@ -223,7 +219,7 @@ def GraphSearch(search, size, start, end, map):
     maxLoops = 10000
 
     while nodesConsidered <= maxLoops:
-        print("Nodes considered:", nodesConsidered)
+        # print("Nodes considered:", nodesConsidered)
         # parents[consideredNode] = previousNode
         fringe.remove(consideredNode)
 
@@ -239,14 +235,14 @@ def GraphSearch(search, size, start, end, map):
         consideredNode = ChooseNextConsideredNode(fringe, map, maxLoops)
         if type(consideredNode) == str:
             return consideredNode
-        print("===================")
+        # print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
 
 # Prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap)
-print("Result:")
+# print("Result:")
 if type(result) == str:
     print(result)
 else:
@@ -257,15 +253,3 @@ else:
             printRow = printRow + " " + stringCol
         # Removing the first unneeded space in each row
         print(printRow[1:])
-
-# inpMap2 = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-#         [8, 115, 1, 1, 1, 1, 1, 1, 1, 1],
-#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
-# print(inpMap2[8][1])
