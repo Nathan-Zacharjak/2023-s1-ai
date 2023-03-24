@@ -87,8 +87,8 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
             continue
         if map[rowPos][colPos] == "X":
             continue
-        # if (rowPos, colPos) in closed:
-        #     continue
+        if (rowPos,colPos) in closed:
+            continue
 
         # foundDupeNode = False
         # for fringeNode in fringe:
@@ -159,11 +159,10 @@ def ChooseNextConsideredNode(fringe, map, maxLoops, search):
 # to the goal by making "*"s along the path it found.
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, map):
-    # (row, col, Parent, Depth)
+    # (row, col, parent, depth, direction, index)
     start = (start[0] - 1, start[1] - 1, "startParent", 0, "startDir", -1)
     end = (end[0] - 1, end[1] - 1)
-    # parents = {}
-    closed = {}
+    closed = set()
     fringe = [start]
     nodesConsidered = 1
     consideredNode = start
@@ -172,12 +171,14 @@ def GraphSearch(search, size, start, end, map):
 
     while nodesConsidered <= maxLoops:
         print("Nodes considered:", nodesConsidered)
-        # parents[consideredNode] = previousNode
         fringe.remove(consideredNode)
-
+ 
         outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, maxLoops)
         if isEnd:
             return outMap
+        
+        # Close a node as it is searched
+        closed.add((consideredNode[0], consideredNode[1]))
 
         fringe, fringeIndex = ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex)
 
