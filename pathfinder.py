@@ -1,25 +1,25 @@
 import numpy as np
 
 # Emulating an input from console
-inpSearch = "ucs"
+inpSearch = "bfs"
 inpStart = (1,1)
-# inpEnd = (10,10)
-# inpSize = (10,10)
-inpEnd = (3,3)
-inpSize = (3,3)
-inpMap = [[1, 1, "X"],
-        [4, "X", 1],
-        [7, 6, 1]]
-# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+inpEnd = (10,10)
+inpSize = (10,10)
+# inpEnd = (3,3)
+# inpSize = (3,3)
+# inpMap = [[1, 1, "X"],
+#         [4, "X", 1],
+#         [7, 6, 1]]
+inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, start, consideredNode, maxLoops):
     currentNode = consideredNode
@@ -167,7 +167,7 @@ def GraphSearch(search, size, start, end, map):
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
-    maxLoops = 10000
+    maxLoops = 50000
 
     while nodesConsidered <= maxLoops:
         print("Nodes considered:", nodesConsidered)
