@@ -1,26 +1,25 @@
 import numpy as np
 
 # Emulating an input from console
-inpSearch = "bfs"
+inpSearch = "ucs"
 inpStart = (1,1)
-inpEnd = (10,10)
-inpSize = (10,10)
-# inpEnd = (4,4)
-# inpSize = (4,4)
-# inpMap = [[1, 1, 1, "X"],
-#         [1, 1, 1, 1],
-#         [1, 1, 1, 1],
-#         ["X", 1, 1, 1]]
-inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+# inpEnd = (10,10)
+# inpSize = (10,10)
+inpEnd = (3,3)
+inpSize = (3,3)
+inpMap = [[1, 1, "X"],
+        [4, "X", 1],
+        [7, 6, 1]]
+# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, start, consideredNode, maxLoops):
     currentNode = consideredNode
@@ -49,7 +48,7 @@ def GeneratePath(map, start, consideredNode, maxLoops):
 def CheckIfEndNode(consideredNode, start, end, map, maxLoops):
     rowPos = consideredNode[0]
     colPos = consideredNode[1]
-    # print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
+    print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
 
     if (rowPos == end[0]) and (colPos == end[1]):
         outMap = GeneratePath(map, start, consideredNode, maxLoops)
@@ -105,97 +104,50 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
-def ChooseNextConsideredNode(fringe, map, maxLoops):
-    # Take the first fringe node's depth to start with
-    # minDepth = maxLoops
-    # nextNodes = []
-    # for node in fringe:
-    #     minDepth = node[3]
-    #     break
-    
-    # # Now find the smallest depth out of all the nodes
-    # for node in fringe:
-    #     depth = node[3]
-    #     if depth < minDepth:
-    #         minDepth = depth
+def ChooseNextConsideredNode(fringe, map, maxLoops, search):
+    nextNodes = fringe
 
-    # # Now find all nodes that have this depth
-    # for node in fringe:
-    #     depth = node[3]
-    #     if depth == minDepth:
-    #         nextNodes.append(node)
-    
-    # print("optimal nodes:", nextNodes)
+    if search == "ucs":
+        # Take the first fringe node's cost to start with
+        minCost = maxLoops
+        nextNodes = []
+        for node in fringe:
+            minCost = map[node[0]][node[1]]
+            break
+        
+        # Now find the smallest cost out of all the nodes
+        for node in fringe:
+            cost = map[node[0]][node[1]]
+            if cost < minCost:
+                minCost = cost
+
+        # Now find all nodes that have this cost
+        for node in fringe:
+            cost = map[node[0]][node[1]]
+            if cost == minCost:
+                nextNodes.append(node)
+
+        # print("optimal nodes:", nextNodes)
+        if len(nextNodes) == 0:
+            return "No optimal nodes!"
 
     # Now from all these equally optimal nodes,
     # apply the "up, down, left right" priority to resolve a tie,
-    # if there is more than 1 node in the potential nextNodes[]
+    # if there is more than 1 optimal cost node in nextNodes
 
-    # upNodes = []
-    # downNodes = []
-    # leftNodes = []
-    # rightNodes = []
-    # for node in nextNodes:
-    #     dir = node[4]
-    #     if dir == "up":
-    #         upNodes.append(node)
-    #     elif dir == "down":
-    #         downNodes.append(node)
-    #     elif dir == "left":
-    #         leftNodes.append(node)
-    #     elif dir == "right":
-    #         rightNodes.append(node)
-        
-    # if len(upNodes) > 0:
-    #     nextNodes = upNodes
-    # elif len(downNodes) > 0:
-    #     nextNodes = downNodes
-    # elif len(leftNodes) > 0:
-    #     nextNodes = leftNodes
-    # elif len(rightNodes) > 0:
-    #     nextNodes = rightNodes
-
-    # upNodes = []
-    # downNodes = []
-    # leftNodes = []
-    # rightNodes = []
-    # for node in nextNodes:
-    #     parentDir = node[2][2]
-    #     if parentDir == "up":
-    #         upNodes.append(node)
-    #     elif parentDir == "down":
-    #         downNodes.append(node)
-    #     elif parentDir == "left":
-    #         leftNodes.append(node)
-    #     elif parentDir == "right":
-    #         rightNodes.append(node)
-        
-    # if len(upNodes) > 0:
-    #     nextNodes = upNodes
-    # elif len(downNodes) > 0:
-    #     nextNodes = downNodes
-    # elif len(leftNodes) > 0:
-    #     nextNodes = leftNodes
-    # elif len(rightNodes) > 0:
-    #     nextNodes = rightNodes
-
-    # print("dir prioritized nodes:", nextNodes)
-    # if len(nextNodes) == 0:
-    #     return "No optimal nodes!"
-    # else:
     # Always pick the node with the lowest index as the indexes are always put in order
     # of the up, down, left, right
     lowestIndex = None
     nextNode = None
 
     # Put the first optimal node and its index as the initial lowest index
-    for node in fringe:
+    for node in nextNodes:
         lowestIndex = node[5]
         nextNode = node
         break
 
     # Find the node with the lowest index
-    for node in fringe:
+    for node in nextNodes:
         if node[5] < lowestIndex:
             lowestIndex = node[5]
             nextNode = node
@@ -216,10 +168,10 @@ def GraphSearch(search, size, start, end, map):
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
-    maxLoops = 10000000000
+    maxLoops = 10000
 
     while nodesConsidered <= maxLoops:
-        # print("Nodes considered:", nodesConsidered)
+        print("Nodes considered:", nodesConsidered)
         # parents[consideredNode] = previousNode
         fringe.remove(consideredNode)
 
@@ -232,10 +184,10 @@ def GraphSearch(search, size, start, end, map):
         if len(fringe) == 0:
             return "Fringe empty"
         
-        consideredNode = ChooseNextConsideredNode(fringe, map, maxLoops)
+        consideredNode = ChooseNextConsideredNode(fringe, map, maxLoops, search)
         if type(consideredNode) == str:
             return consideredNode
-        # print("===================")
+        print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
