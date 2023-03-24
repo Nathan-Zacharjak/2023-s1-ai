@@ -3,23 +3,23 @@ import numpy as np
 # Emulating an input from console
 inpSearch = "ucs"
 inpStart = (1,1)
-inpEnd = (10,10)
-inpSize = (10,10)
-# inpEnd = (3,3)
-# inpSize = (3,3)
-# inpMap = [[1, 1, "X"],
-#         [4, "X", 1],
-#         [7, 6, 1]]
-inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+# inpEnd = (10,10)
+# inpSize = (10,10)
+inpEnd = (3,1)
+inpSize = (3,3)
+inpMap = [[1, 1, 1],
+        [2, 1, 1],
+        [7, 6, 1]]
+# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, start, consideredNode, maxLoops):
     currentNode = consideredNode
@@ -97,6 +97,9 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
 def ChooseNextConsideredNode(fringe, map, maxLoops, search):
     nextNodes = fringe
 
+    # Need to calculate the actual cost of traveling down the path to any one fringe node,
+    # and not just searching all '1' nodes first,
+    # *then* picking the lowest cost nodes of *that* cost
     if search == "ucs":
         # Take the first fringe node's cost to start with
         minCost = maxLoops
