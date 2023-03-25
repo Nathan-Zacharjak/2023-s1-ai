@@ -105,7 +105,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
-def ChooseNextConsideredNode(fringe, map, search):
+def ChooseNextConsideredNode(fringe, search):
     nextNodes = fringe
 
     if search == "ucs":
@@ -190,7 +190,7 @@ def GraphSearch(search, size, start, end, map):
             return "Fringe empty"
         
         # If there is a fringe, choose the next node to check if its the end
-        consideredNode = ChooseNextConsideredNode(fringe, map, search)
+        consideredNode = ChooseNextConsideredNode(fringe, search)
         # (And if something went wrong with that function return an error string)
         if type(consideredNode) == str:
             return consideredNode
