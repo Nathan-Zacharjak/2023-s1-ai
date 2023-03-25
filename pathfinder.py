@@ -3,23 +3,23 @@ import numpy as np
 # Emulating an input from console
 inpSearch = "ucs"
 inpStart = (1,1)
-# inpEnd = (10,10)
-# inpSize = (10,10)
-inpEnd = (3,1)
-inpSize = (3,3)
-inpMap = [[1, 1, 1],
-        [2, 1, 1],
-        [7, 6, 1]]
-# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+inpEnd = (10,10)
+inpSize = (10,10)
+# inpEnd = (3,3)
+# inpSize = (3,3)
+# inpMap = [[1, 1, 1],
+#         [2, "X", "X"],
+#         [7, "X", 1]]
+inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, start, consideredNode, maxLoops):
     currentNode = consideredNode
@@ -64,59 +64,67 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex):
     row = consideredNode[0]
     col = consideredNode[1]
     consideredNodeDepth = consideredNode[3]
+    consideredNodeCost = consideredNode[6]
+    consideredNodeValue = map[row][col]
+    expandOrder = ["up", "down", "left", "right"]
+
+    # Creating nodes and putting them in potentialExpand[]
+    for dir in expandOrder:
+        expRow = -1
+        expCol = -1
+        if dir == "up":
+            expRow = row-1
+            expCol = col
+        elif dir == "down":
+            expRow = row+1
+            expCol = col
+        elif dir == "left":
+            expRow = row
+            expCol = col-1
+        elif dir == "right":
+            expRow = row
+            expCol = col+1
         
-    up = (row-1,col,consideredNode,consideredNodeDepth + 1, "up", fringeIndex)
-    fringeIndex += 1
-    down = (row+1,col,consideredNode,consideredNodeDepth + 1, "down", fringeIndex)
-    fringeIndex += 1
-    left = (row,col-1,consideredNode,consideredNodeDepth + 1, "left", fringeIndex)
-    fringeIndex += 1
-    right = (row,col+1,consideredNode,consideredNodeDepth + 1, "right", fringeIndex)
-    fringeIndex += 1
-    potentialExpand = [up,down,left,right]
-
-    for node in potentialExpand:
-        rowPos = node[0]
-        colPos = node[1]
-
-        if (rowPos < 0) or (rowPos > size[0] - 1):
+        # Only adding expanded nodes to the fringe if they are valid and not closed
+        if (expRow < 0) or (expRow > size[0] - 1):
             continue
-        if (colPos < 0) or (colPos > size[0] - 1):
+        if (expCol < 0) or (expCol > size[0] - 1):
             continue
-        if map[rowPos][colPos] == "X":
+        expValue = map[expRow][expCol]
+        if expValue == "X":
             continue
-        if (rowPos,colPos) in closed:
+        if (expRow,expCol) in closed:
             continue
-
+        
+        cost = consideredNodeCost + max(expValue - consideredNodeValue + 1, 1)
+        node = (expRow, expCol, consideredNode, consideredNodeDepth + 1, dir, fringeIndex, cost)
         fringe.append(node)
+        fringeIndex += 1
 
     return fringe, fringeIndex
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
-def ChooseNextConsideredNode(fringe, map, maxLoops, search):
+def ChooseNextConsideredNode(fringe, map, search):
     nextNodes = fringe
 
-    # Need to calculate the actual cost of traveling down the path to any one fringe node,
-    # and not just searching all '1' nodes first,
-    # *then* picking the lowest cost nodes of *that* cost
     if search == "ucs":
         # Take the first fringe node's cost to start with
-        minCost = maxLoops
+        minCost = -1
         nextNodes = []
         for node in fringe:
-            minCost = map[node[0]][node[1]]
+            minCost = node[6]
             break
         
         # Now find the smallest cost out of all the nodes
         for node in fringe:
-            cost = map[node[0]][node[1]]
+            cost = node[6]
             if cost < minCost:
                 minCost = cost
 
         # Now find all nodes that have this cost
         for node in fringe:
-            cost = map[node[0]][node[1]]
+            cost = node[6]
             if cost == minCost:
                 nextNodes.append(node)
 
@@ -152,8 +160,8 @@ def ChooseNextConsideredNode(fringe, map, maxLoops, search):
 # to the goal by making "*"s along the path it found.
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, map):
-    # (row, col, parent, depth, direction, index)
-    start = (start[0] - 1, start[1] - 1, "startParent", 0, "startDir", -1)
+    # (row, col, parent, depth, direction, index, cost)
+    start = (start[0] - 1, start[1] - 1, "startParent", 0, "startDir", -1, 0)
     end = (end[0] - 1, end[1] - 1)
     closed = set()
     fringe = [start]
@@ -182,10 +190,11 @@ def GraphSearch(search, size, start, end, map):
             return "Fringe empty"
         
         # If there is a fringe, choose the next node to check if its the end
-        consideredNode = ChooseNextConsideredNode(fringe, map, maxLoops, search)
+        consideredNode = ChooseNextConsideredNode(fringe, map, search)
         # (And if something went wrong with that function return an error string)
         if type(consideredNode) == str:
             return consideredNode
+        
         print("===================")
         nodesConsidered += 1
 
@@ -195,6 +204,7 @@ def GraphSearch(search, size, start, end, map):
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap)
 if type(result) == str:
     print(result)
+    print("null")
 else:
     for row in result:
         printRow = ""
