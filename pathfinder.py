@@ -4,16 +4,15 @@ import sys
 # Getting and formatting command line arguments
 # into a format GraphSearch() can read
 args = sys.argv[1:]
-print("Args:",args)
 inpSearch = args[1]
 inpHeuristic = ""
 inpSize = []
 inpStart = []
 inpEnd = []
 inpMap = []
+
 if len(args) > 2:
     inpHeuristic = args[2]
-print("inpSearch:", inpSearch, "inpHeuristic:", inpHeuristic)
 
 # Getting the input file's contents into the right format
 f = open(args[0])
@@ -40,33 +39,6 @@ for line in f:
 
     lineNumber += 1
 f.close()
-print("inpSize:", inpSize, "inpStart:", inpStart, "inpEnd:", inpEnd)
-print("inpMap:")
-for row in inpMap:
-    print(row)
-
-# Emulating an input from console
-# inpSearch = "astar"
-# inpHeuristic = "euclidean"
-# inpStart = (1,1)
-# inpEnd = (10,10)
-# inpSize = (10,10)
-# inpEnd = (4,4)
-# inpSize = (4,4)
-# inpMap = [[1, 1, 1, 1],
-#         [1, 1, 1, 1],
-#         [1, 1, 1, 1],
-#         [7, 1, 1, 1]]
-# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, start, consideredNode, maxLoops):
     currentNode = consideredNode
@@ -95,7 +67,7 @@ def GeneratePath(map, start, consideredNode, maxLoops):
 def CheckIfEndNode(consideredNode, start, end, map, maxLoops):
     rowPos = consideredNode[0]
     colPos = consideredNode[1]
-    print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
+    # print("is consideredNode end:", consideredNode, end, rowPos == end[0] and colPos == end[1])
 
     if (rowPos == end[0]) and (colPos == end[1]):
         outMap = GeneratePath(map, start, consideredNode, maxLoops)
@@ -231,7 +203,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
     maxLoops = 50000
 
     while nodesConsidered <= maxLoops:
-        print("Nodes considered:", nodesConsidered)
+        # print("Nodes considered:", nodesConsidered)
         # Remove the node from the fringe and consider if it is the end node
         fringe.remove(consideredNode)
  
@@ -255,7 +227,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
         if type(consideredNode) == str:
             return consideredNode
         
-        print("===================")
+        # print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
@@ -263,7 +235,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
 # Runs the program and prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
 if type(result) == str:
-    print(result)
+    # print(result)
     print("null")
 else:
     for row in result:
