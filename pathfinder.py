@@ -1,27 +1,33 @@
 import math
+import sys
+
+# Getting and formatting command line arguments
+# into a format GraphSearch() can read
+print(sys.argv)
+print("Number of arguments:", len(sys.argv))
 
 # Emulating an input from console
-inpSearch = "astar"
-inpHeuristic = "euclidean"
-inpStart = (1,1)
-inpEnd = (10,10)
-inpSize = (10,10)
+# inpSearch = "astar"
+# inpHeuristic = "euclidean"
+# inpStart = (1,1)
+# inpEnd = (10,10)
+# inpSize = (10,10)
 # inpEnd = (4,4)
 # inpSize = (4,4)
 # inpMap = [[1, 1, 1, 1],
 #         [1, 1, 1, 1],
 #         [1, 1, 1, 1],
 #         [7, 1, 1, 1]]
-inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
-        [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
-        [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
-        [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
-        [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
-        [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
-        ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
+# inpMap = [[1, 1, 1, 1, 1, 1, 4, 7, 8, "X"],
+#         [1, 1, 1, 1, 1, 1, 1, 5, 8, 8],
+#         [1, 1, 1, 1, 1, 1, 1, 4, 6, 7],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 6],
+#         [1, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#         [6, 1, 1, 1, 1, "X", 1, 1, 1, 1],
+#         [7, 7, 1, "X", "X", "X", 1, 1, 1, 1],
+#         [8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+#         ["X", 8, 7, 1, 1, 1, 1, 1, 1, 1]]
 
 def GeneratePath(map, start, consideredNode, maxLoops):
     currentNode = consideredNode
@@ -215,16 +221,16 @@ def GraphSearch(search, size, start, end, map, heuristic):
 
     return "Loop limit reached!"
 
-# Runs the program and prints the result
-result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
-if type(result) == str:
-    print(result)
-    print("null")
-else:
-    for row in result:
-        printRow = ""
-        for col in row:
-            stringCol = str(col)
-            printRow = printRow + " " + stringCol
-        # Removing the first unneeded space in each row
-        print(printRow[1:])
+# # Runs the program and prints the result
+# result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
+# if type(result) == str:
+#     print(result)
+#     print("null")
+# else:
+#     for row in result:
+#         printRow = ""
+#         for col in row:
+#             stringCol = str(col)
+#             printRow = printRow + " " + stringCol
+#         # Removing the first unneeded space in each row
+#         print(printRow[1:])
