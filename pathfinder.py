@@ -7,14 +7,43 @@ args = sys.argv[1:]
 print("Args:",args)
 inpSearch = args[1]
 inpHeuristic = ""
+inpSize = []
+inpStart = []
+inpEnd = []
+inpMap = []
 if len(args) > 2:
     inpHeuristic = args[2]
 print("inpSearch:", inpSearch, "inpHeuristic:", inpHeuristic)
 
 # Getting the input file's contents into the right format
 f = open(args[0])
+lineNumber = 1
 for line in f:
-    print(line)
+    # Turning each line into an array of numbers and "X" strings
+    line = line.rstrip()
+    line = line.split(" ")
+    mapRow = []
+    for number in line:
+        if number != "X":
+            number = int(number)
+
+        if lineNumber == 1:
+            inpSize.append(number)
+        elif lineNumber == 2:
+            inpStart.append(number)
+        elif lineNumber == 3:
+            inpEnd.append(number)
+        else:
+            mapRow.append(number)
+    if mapRow != []:
+        inpMap.append(mapRow)
+
+    lineNumber += 1
+f.close()
+print("inpSize:", inpSize, "inpStart:", inpStart, "inpEnd:", inpEnd)
+print("inpMap:")
+for row in inpMap:
+    print(row)
 
 # Emulating an input from console
 # inpSearch = "astar"
@@ -231,16 +260,16 @@ def GraphSearch(search, size, start, end, map, heuristic):
 
     return "Loop limit reached!"
 
-# # Runs the program and prints the result
-# result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
-# if type(result) == str:
-#     print(result)
-#     print("null")
-# else:
-#     for row in result:
-#         printRow = ""
-#         for col in row:
-#             stringCol = str(col)
-#             printRow = printRow + " " + stringCol
-#         # Removing the first unneeded space in each row
-#         print(printRow[1:])
+# Runs the program and prints the result
+result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
+if type(result) == str:
+    print(result)
+    print("null")
+else:
+    for row in result:
+        printRow = ""
+        for col in row:
+            stringCol = str(col)
+            printRow = printRow + " " + stringCol
+        # Removing the first unneeded space in each row
+        print(printRow[1:])
