@@ -235,8 +235,8 @@ def GraphSearch(search, size, start, end, map, heuristic):
 # Runs the program and prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
 if type(result) == str:
-    # print(result)
-    print("null")
+    print(result)
+    # print("null")
 else:
     for row in result:
         printRow = ""
