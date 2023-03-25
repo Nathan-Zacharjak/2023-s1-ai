@@ -1,4 +1,3 @@
-import numpy as np
 import math
 
 # Emulating an input from console
@@ -102,12 +101,12 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
         cost = consideredNodeCost + max(expValue - consideredNodeValue + 1, 1)
         # If we're doing A* search and we've got a heuristic,
         # calculate it and add it to the cost
-        if heuristic and (heuristic == "manhattan"):
+        if heuristic == "manhattan":
             rowDist = abs(row - end[0])
             colDist = abs(col - end[1])
             heuristicCost = rowDist + colDist
             cost = cost + heuristicCost
-        if heuristic and (heuristic == "euclidean"):
+        if heuristic == "euclidean":
             rowDist = row - end[0]
             colDist = col - end[1]
             heuristicCost = math.sqrt(rowDist*rowDist + colDist*colDist)
