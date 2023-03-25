@@ -3,8 +3,18 @@ import sys
 
 # Getting and formatting command line arguments
 # into a format GraphSearch() can read
-print(sys.argv)
-print("Number of arguments:", len(sys.argv))
+args = sys.argv[1:]
+print("Args:",args)
+inpSearch = args[1]
+inpHeuristic = ""
+if len(args) > 2:
+    inpHeuristic = args[2]
+print("inpSearch:", inpSearch, "inpHeuristic:", inpHeuristic)
+
+# Getting the input file's contents into the right format
+f = open(args[0])
+for line in f:
+    print(line)
 
 # Emulating an input from console
 # inpSearch = "astar"
