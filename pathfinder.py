@@ -202,7 +202,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
-    maxLoops = 50000
+    maxLoops = 37
 
     while nodesConsidered <= maxLoops:
         print("Nodes considered:", nodesConsidered)
