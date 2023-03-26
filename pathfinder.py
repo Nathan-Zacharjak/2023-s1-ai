@@ -141,31 +141,24 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
 
 # Returns the next node to expand based on the fringe
 # and the type of search we are using
-def ChooseNextConsideredNode(fringe, search, closed):
-    openNodes = []
-    for node in fringe:
-        if (node[0],node[1]) in closed:
-            continue
-        openNodes.append(node)
-
-    nextNodes = openNodes
-
+def ChooseNextConsideredNode(fringe, search):
+    nextNodes = fringe
     if search != "bfs":
         # Take the first fringe node's cost to start with
         minCost = -1
         nextNodes = []
-        for node in openNodes:
+        for node in fringe:
             minCost = node[6]
             break
         
         # Now find the smallest cost out of all the nodes
-        for node in openNodes:
+        for node in fringe:
             cost = node[6]
             if cost < minCost:
                 minCost = cost
 
         # Now find all nodes that have this cost
-        for node in openNodes:
+        for node in fringe:
             cost = node[6]
             if cost == minCost:
                 nextNodes.append(node)
@@ -232,7 +225,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
             return "Fringe empty"
         
         # If there is a fringe, choose the next node to check if its the end
-        consideredNode = ChooseNextConsideredNode(fringe, search, closed)
+        consideredNode = ChooseNextConsideredNode(fringe, search)
         # (And if something went wrong with that function return an error string)
         if type(consideredNode) == str:
             return consideredNode
