@@ -212,18 +212,16 @@ def GraphSearch(search, size, start, end, map, heuristic):
     maxLoops = 50000
 
     while nodesConsidered <= maxLoops:
-        # print("Nodes considered:", nodesConsidered)
+        print("Nodes considered:", nodesConsidered)
         # Remove the node from the fringe and consider if it is the end node
         fringe.remove(consideredNode)
  
-        # print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
+        print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
         outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, maxLoops)
         if isEnd:
             return outMap
         
         # Close a node as it is searched
-        if (consideredNode[0], consideredNode[1]) in closed:
-            return "Oh noes"
         closed.add((consideredNode[0], consideredNode[1]))
 
         # If it isn't the end, add its neighbors to the fringe
@@ -239,7 +237,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
         if type(consideredNode) == str:
             return consideredNode
         
-        # print("===================")
+        print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
@@ -247,8 +245,8 @@ def GraphSearch(search, size, start, end, map, heuristic):
 # Runs the program and prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
 if type(result) == str:
-    # print(result)
-    print("null")
+    print(result)
+    # print("null")
 else:
     for row in result:
         printRow = ""
