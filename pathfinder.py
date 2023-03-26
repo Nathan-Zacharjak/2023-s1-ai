@@ -50,6 +50,8 @@ def GeneratePath(map, start, consideredNode, maxLoops):
         # Staring the current node on the map
         row = currentNode[0]
         col = currentNode[1]
+        # index = currentNode[6]
+        # map[row][col] = index
         map[row][col] = "*"
         if (row == start[0]) and (col == start[1]):
             return map
@@ -202,14 +204,14 @@ def GraphSearch(search, size, start, end, map, heuristic):
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
-    maxLoops = 37
+    maxLoops = 50000
 
     while nodesConsidered <= maxLoops:
-        print("Nodes considered:", nodesConsidered)
+        # print("Nodes considered:", nodesConsidered)
         # Remove the node from the fringe and consider if it is the end node
         fringe.remove(consideredNode)
  
-        print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
+        # print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
         outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, maxLoops)
         if isEnd:
             return outMap
@@ -219,6 +221,10 @@ def GraphSearch(search, size, start, end, map, heuristic):
 
         # If it isn't the end, add its neighbors to the fringe
         fringe, fringeIndex = ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heuristic, end)
+
+        # print("Fringe:")
+        # for node in fringe:
+            # print((node[0],node[1],node[3],node[4],node[6]),node[5])
 
         # If there is no fringe, there is no valid path
         if len(fringe) == 0:
@@ -230,7 +236,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
         if type(consideredNode) == str:
             return consideredNode
         
-        print("===================")
+        # print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
@@ -238,8 +244,8 @@ def GraphSearch(search, size, start, end, map, heuristic):
 # Runs the program and prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
 if type(result) == str:
-    print(result)
-    # print("null")
+    # print(result)
+    print("null")
 else:
     for row in result:
         printRow = ""
