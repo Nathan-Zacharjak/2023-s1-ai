@@ -87,7 +87,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
     expandOrder = ["up", "down", "left", "right"]
 
     # Creating nodes and putting them in potentialExpand[]
-    print("Closed:",closed)
+    # print("Closed:",closed)
     for dir in expandOrder:
         expRow = -1
         expCol = -1
@@ -112,7 +112,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
         expValue = map[expRow][expCol]
         if expValue == "X":
             continue
-        print((expRow, expCol), "In closed:", (expRow,expCol) in closed)
+        # print((expRow, expCol), "In closed:", (expRow,expCol) in closed)
         if (expRow,expCol) in closed:
             continue
         
@@ -133,7 +133,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
             cost = cost + heuristicCost
         
         node = (expRow, expCol, consideredNode, consideredNodeDepth + 1, dir, fringeIndex, cost)
-        print("adding:", (expRow, expCol))
+        # print("adding:", (expRow, expCol))
         fringe.append(node)
         fringeIndex += 1
 
@@ -209,14 +209,14 @@ def GraphSearch(search, size, start, end, map, heuristic):
     nodesConsidered = 1
     consideredNode = start
     fringeIndex = 0
-    maxLoops = 32
+    maxLoops = 50000
 
     while nodesConsidered <= maxLoops:
-        print("Nodes considered:", nodesConsidered)
+        # print("Nodes considered:", nodesConsidered)
         # Remove the node from the fringe and consider if it is the end node
         fringe.remove(consideredNode)
  
-        print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
+        # print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
         outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, maxLoops)
         if isEnd:
             return outMap
@@ -239,7 +239,7 @@ def GraphSearch(search, size, start, end, map, heuristic):
         if type(consideredNode) == str:
             return consideredNode
         
-        print("===================")
+        # print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
@@ -247,8 +247,8 @@ def GraphSearch(search, size, start, end, map, heuristic):
 # Runs the program and prints the result
 result = GraphSearch(inpSearch, inpSize, inpStart, inpEnd, inpMap, inpHeuristic)
 if type(result) == str:
-    print(result)
-    # print("null")
+    # print(result)
+    print("null")
 else:
     for row in result:
         printRow = ""
