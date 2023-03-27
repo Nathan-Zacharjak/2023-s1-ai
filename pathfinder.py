@@ -84,12 +84,11 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
     row = consideredNode[0]
     col = consideredNode[1]
     consideredNodeDepth = consideredNode[3]
-    consideredNodeCost = consideredNode[6]
+    consideredNodePathCost = consideredNode[7]
     consideredNodeValue = map[row][col]
     expandOrder = ["up", "down", "left", "right"]
 
     # Creating nodes and putting them in potentialExpand[]
-    # print("Closed:",closed)
     for dir in expandOrder:
         expRow = -1
         expCol = -1
@@ -114,28 +113,26 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
         expValue = map[expRow][expCol]
         if expValue == "X":
             continue
-        # print((expRow, expCol), "In closed:", (expRow,expCol) in closed)
         if (expRow,expCol) in closed:
             continue
         
-        # Need to ensure the cost and heuristic is calculated correctly!
-        # Take the point in which the paths diverged, make a smaller test case, and calculate the cost + heuristic by hand!
-        cost = consideredNodeCost + max(expValue - consideredNodeValue + 1, 1)
+        # Calculating the node's cost
+        pathCost = consideredNodePathCost + max(expValue - consideredNodeValue + 1, 1)
+        costPlusHeuristic = pathCost
         # If we're doing A* search and we've got a heuristic,
         # calculate it and add it to the cost
         if heuristic == "manhattan":
             rowDist = abs(expRow - end[0])
             colDist = abs(expCol - end[1])
             heuristicCost = rowDist + colDist
-            cost = cost + heuristicCost
+            costPlusHeuristic = pathCost + heuristicCost
         if heuristic == "euclidean":
             rowDist = expRow - end[0]
             colDist = expCol - end[1]
             heuristicCost = math.sqrt(rowDist*rowDist + colDist*colDist)
-            cost = cost + heuristicCost
+            costPlusHeuristic = pathCost + heuristicCost
         
-        node = (expRow, expCol, consideredNode, consideredNodeDepth + 1, dir, fringeIndex, cost)
-        # print("adding:", (expRow, expCol))
+        node = (expRow, expCol, consideredNode, consideredNodeDepth + 1, dir, fringeIndex, costPlusHeuristic, pathCost)
         fringe.append(node)
         fringeIndex += 1
 
@@ -145,6 +142,7 @@ def ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heurist
 # and the type of search we are using
 def ChooseNextConsideredNode(fringe, search):
     nextNodes = fringe
+
     if search != "bfs":
         # Take the first fringe node's cost to start with
         minCost = -1
@@ -197,7 +195,7 @@ def ChooseNextConsideredNode(fringe, search):
 # Returns a string if it couldn't find a path
 def GraphSearch(search, size, start, end, map, heuristic):
     # (row, col, parent, depth, direction, index, cost)
-    start = (start[0] - 1, start[1] - 1, "startParent", 0, "startDir", -1, 0)
+    start = (start[0] - 1, start[1] - 1, "startParent", 0, "startDir", -1, 0, 0)
     end = (end[0] - 1, end[1] - 1)
     closed = set()
     fringe = [start]
@@ -207,11 +205,9 @@ def GraphSearch(search, size, start, end, map, heuristic):
     maxLoops = 50000
 
     while nodesConsidered <= maxLoops:
-        # print("Nodes considered:", nodesConsidered)
         # Remove the node from the fringe and consider if it is the end node
         fringe.remove(consideredNode)
  
-        # print("is consideredNode end:", consideredNode, end, consideredNode[0] == end[0] and consideredNode[1] == end[1])
         outMap, isEnd = CheckIfEndNode(consideredNode, start, end, map, maxLoops)
         if isEnd:
             return outMap
@@ -221,10 +217,6 @@ def GraphSearch(search, size, start, end, map, heuristic):
 
         # If it isn't the end, add its neighbors to the fringe
         fringe, fringeIndex = ExpandFringe(closed, size, map, fringe, consideredNode, fringeIndex, heuristic, end)
-
-        # print("Fringe:")
-        # for node in fringe:
-            # print((node[0],node[1],node[3],node[4],node[6]),node[5])
 
         # If there is no fringe, there is no valid path
         if len(fringe) == 0:
@@ -236,7 +228,6 @@ def GraphSearch(search, size, start, end, map, heuristic):
         if type(consideredNode) == str:
             return consideredNode
         
-        # print("===================")
         nodesConsidered += 1
 
     return "Loop limit reached!"
