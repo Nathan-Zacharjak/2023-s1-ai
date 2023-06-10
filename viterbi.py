@@ -61,13 +61,30 @@ def FindAdjacentValues(value, rowNum, colNum):
                  "south": "null",
                  "west": "null",
                  "east": "null"}
+    
+    if rowNum <= 0:
+        adjValues["north"] = "X"
+    if rowNum >= mapRows - 1:
+        adjValues["south"] = "X"
+    if colNum <= 0:
+        adjValues["west"] = "X"
+    if colNum >= mapCols - 1:
+        adjValues["east"] = "X"
 
-    if rowNum == 0 or rowNum == mapRows - 1:
-        west = "X"
-
-    if colNum == 0
-
-    for 
+    for key, value in adjValues.items():
+        if value == "null":
+            if key == "north":
+                adjValues[key] = robotMap[rowNum - 1][colNum]
+            elif key == "south":
+                adjValues[key] = robotMap[rowNum + 1][colNum]
+            elif key == "west":
+                adjValues[key] = robotMap[rowNum][colNum - 1]
+            elif key == "east":
+                adjValues[key] = robotMap[rowNum][colNum + 1]
+        
+    print(rowNum, colNum)
+    for key, value in adjValues.items():
+        print(key, value)
 
     return adjValues
 
@@ -82,10 +99,10 @@ for row in robotMap:
         adjValues = FindAdjacentValues(col, rowNum, colNum)
 
         TmRow.append(prob)
-
-    colNum += 1
+        colNum += 1
 
     rowNum += 1
+    colNum = 0
     Tm.append(TmRow)
 
 
