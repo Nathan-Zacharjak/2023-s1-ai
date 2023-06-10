@@ -41,9 +41,28 @@ file.close()
 # Preparing the variables needed for the viterbi program
 robotMap = np.array(robotMap, dtype=str)
 observations = np.array(observations, dtype=str)
-outputTrellis = []
 
+# 1. Build Tm (Transition/Position change matrix)
 
-# Printing and outputting the final set of trellis matrices:
-print(observations)
-np.savez("output.npz", *observations)
+# 2. Build Em (Emission/Observation trust matrix)
+
+# 3. Create the array of initial probabilities (Robot is equally likely to be at any position)
+
+# 4. Add the first entry to the trellis matrix, by implementing the first for loop in the pseudoscope
+#    using the array of initial probabilities and the emission matrix
+trellis = []
+
+# 5. Do the gigachad 2nd for loop in the pesudocode
+#   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
+#   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki ∗ Em_ij for each k
+#   c. Find the maximum probability calculated from "KTemp", and put that into the position i, and timestep j in the trellis matrix
+#   d. Repeat for the next position for every timestep
+
+# 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
+#    as formatted by gradescope by adding 0's at each of the X positions of the robot map
+#    and put them into an array called "output"
+output = []
+
+# 6. Print and export the output array using print() and np.savez()
+print(output)
+np.savez("output.npz", *output)
