@@ -43,6 +43,7 @@ robotMap = np.array(robotMap, dtype=str)
 observations = np.array(observations, dtype=str)
 
 # 1. Build Tm (Transition/Probability of position change matrix)
+# Getting an array of valid positions
 validPositions = []
 rowNum = 0
 colNum = 0
@@ -52,7 +53,7 @@ for row in robotMap:
             validPositions.append((rowNum, colNum))
 
         colNum += 1
-
+    colNum = 0
     rowNum += 1
 
 # Finds and returns the values of adjacent positions on the robot map
@@ -84,23 +85,47 @@ def FindAdjacentValues(value, rowNum, colNum):
 
     return adjValues
 
+# Building the Tm matrix
 Tm = []
 rowNum = 0
 colNum = 0
-for row in robotMap:
-    TmRow = []
 
-    for col in row:
-        prob = 0
-        adjValues = FindAdjacentValues(col, rowNum, colNum)
+for fromPos in validPositions:
+    xFrom = fromPos[0]
+    yFrom = fromPos[1]
 
-        TmRow.append(prob)
-        colNum += 1
+    # Creating an array of a position's neighbouring positions
+    neighbours = {}
+    for toPos in validPositions:
+        xTo = toPos[0]
+        yTo = toPos[1]
+        toValue = robotMap[xTo, yTo]
 
-    rowNum += 1
-    colNum = 0
-    Tm.append(TmRow)
+        if toValue == "X":
+            continue
+        elif abs(xTo - xFrom) == 1 and abs(yTo - yFrom) == 0:
+            neighbours[toPos] = True
+        elif abs(xTo - xFrom) == 0 and abs(yTo - yFrom) == 1:
+            neighbours[toPos] = True
 
+    
+    print(fromPos)
+    print(neighbours)
+    
+    # Putting the probabilities of travelling from this point into the transition matrix
+    row = []
+    prob = 1/len(neighbours)
+    for pos in validPositions:
+        if neighbours.get(pos):
+            row.append(prob)
+        else:
+            row.append(0)
+
+    Tm.append(row)
+
+print("Transition matrix:")
+for row in Tm:
+    print(row)
 
 # 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
 
