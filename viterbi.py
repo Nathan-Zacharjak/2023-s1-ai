@@ -42,11 +42,57 @@ file.close()
 robotMap = np.array(robotMap, dtype=str)
 observations = np.array(observations, dtype=str)
 
-# 1. Build Tm (Transition/Position change matrix)
+# 1. Build Tm (Transition/Probability of position change matrix)
+validPositions = []
+rowNum = 0
+colNum = 0
+for row in robotMap:
+    for col in row:
+        if col == "0":
+            validPositions.append((rowNum, colNum))
 
-# 2. Build Em (Emission/Observation trust matrix)
+        colNum += 1
 
-# 3. Create the array of initial probabilities (Robot is equally likely to be at any position)
+    rowNum += 1
+
+# Finds and returns the values of adjacent positions on the robot map
+def FindAdjacentValues(value, rowNum, colNum):
+    adjValues = {"north": "null",
+                 "south": "null",
+                 "west": "null",
+                 "east": "null"}
+
+    if rowNum == 0 or rowNum == mapRows - 1:
+        west = "X"
+
+    if colNum == 0
+
+    for 
+
+    return adjValues
+
+Tm = []
+rowNum = 0
+colNum = 0
+for row in robotMap:
+    TmRow = []
+
+    for col in row:
+        prob = 0
+        adjValues = FindAdjacentValues(col, rowNum, colNum)
+
+        TmRow.append(prob)
+
+    colNum += 1
+
+    rowNum += 1
+    Tm.append(TmRow)
+
+
+# 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
+
+# 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
+#    trellis[i,1] ← πi * Emiy1
 
 # 4. Add the first entry to the trellis matrix, by implementing the first for loop in the pseudoscope
 #    using the array of initial probabilities and the emission matrix
