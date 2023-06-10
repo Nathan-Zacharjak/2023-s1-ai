@@ -29,16 +29,21 @@ for line in file:
     elif lineCount == 2 + mapRows:
         noOfObservations = int(line[0])
     elif lineCount > 2 + mapRows and lineCount < 3 + mapRows + noOfObservations:
-        observations.append(line[0])
+        for char in line[0]:
+            obsArray.append(char)
+
+        observations.append(obsArray)
     elif lineCount == 3 + mapRows + noOfObservations:
         errorRate = float(line[0])
         
 file.close()
 
+# Preparing the variables needed for the viterbi program
 robotMap = np.array(robotMap, dtype=str)
 observations = np.array(observations, dtype=str)
+outputTrellis = []
 
-# Testing the values read for the input values
-output = [mapRows, mapCols, robotMap, noOfObservations, observations, errorRate]
-print(output)
-np.savez("output.npz", *output)
+
+# Printing and outputting the final set of trellis matrices:
+print(observations)
+np.savez("output.npz", *observations)
