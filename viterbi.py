@@ -81,10 +81,6 @@ def FindAdjacentValues(value, rowNum, colNum):
                 adjValues[key] = robotMap[rowNum][colNum - 1]
             elif key == "east":
                 adjValues[key] = robotMap[rowNum][colNum + 1]
-        
-    print(rowNum, colNum)
-    for key, value in adjValues.items():
-        print(key, value)
 
     return adjValues
 
