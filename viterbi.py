@@ -29,10 +29,7 @@ for line in file:
     elif lineCount == 2 + mapRows:
         noOfObservations = int(line[0])
     elif lineCount > 2 + mapRows and lineCount < 3 + mapRows + noOfObservations:
-        for char in line[0]:
-            obsArray.append(char)
-
-        observations.append(obsArray)
+        observations.append(line[0])
     elif lineCount == 3 + mapRows + noOfObservations:
         errorRate = float(line[0])
         
