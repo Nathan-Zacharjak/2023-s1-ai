@@ -129,6 +129,7 @@ for row in Tm:
 
 # 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
 
+
 # 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
 #    trellis[i,1] ← πi * Emiy1
 
@@ -138,9 +139,12 @@ trellis = []
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
-#   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki ∗ Em_ij for each k
+#   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki ∗ Em_ij
+#      for each most likely prior position(s) in K, where k is one of the most likely prior positions
+#      (more than 1 if multiple positions have the same highest value!)
 #   c. Find the maximum probability calculated from "KTemp", and put that into the position i, and timestep j in the trellis matrix
-#   d. Repeat for the next position for every timestep
+#   d. Repeat for the next position until all positions are done for that timestep
+#   e. Repeat for every timestep
 
 # 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
 #    as formatted by gradescope by adding 0's at each of the X positions of the robot map
