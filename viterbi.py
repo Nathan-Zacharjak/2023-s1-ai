@@ -190,11 +190,12 @@ firstTrellisColumn = []
 for i, pos in enumerate(validPositions):
     print("Pos: ", pos)
     print("Pi: ", Pi[i])
-    print("Em_iy_1: ", Em[i][1])
-    prob = Pi[i] * Em[i][1]
+    print("Em_iy_1: ", Em[i][0])
+    prob = Pi[i] * Em[i][0]
     print(prob)
     firstTrellisColumn.append(prob)
 
+firstTrellisColumn = np.array(firstTrellisColumn)
 trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
