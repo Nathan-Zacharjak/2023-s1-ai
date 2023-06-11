@@ -202,8 +202,7 @@ trellis.append(firstTrellisColumn)
 #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
 #      (more than 1 if multiple positions have the same highest value!)
 #   c. Find the maximum probability calculated from "KTemp", and put that into the position i, and timestep j in the trellis matrix
-#   d. Repeat for the next position until all positions are done for that timestep
-#   e. Repeat for every timestep
+#   d. Repeat for the next position until all positions are done for that timestep, repeat for every timestep
 
 # 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
 #    as formatted by gradescope by adding 0's at each of the X positions of the robot map
