@@ -188,9 +188,7 @@ trellis = []
 
 firstTrellisColumn = []
 for i, pos in enumerate(validPositions):
-    print("Pos: ", pos)
-    print("Pi: ", Pi[i])
-    print("Em_iy_1: ", Em[i][0])
+    print(pos)
     prob = Pi[i] * Em[i][0]
     print(prob)
     firstTrellisColumn.append(prob)
@@ -211,10 +209,24 @@ trellis.append(firstTrellisColumn)
 #    as formatted by gradescope by adding 0's at each of the X positions of the robot map
 #    and put them into an array called "output"
 output = []
+index = 0
+for timestep in trellis:
+    for row in robotMap:
+        outputRow = []
 
-# 6. Print and export the output array using print() and np.savez()
-print(trellis)
-np.savez("output.npz", *trellis)
+        for col in row:
+            if col == 'X':
+                outputRow.append(0)
+            else:
+                outputRow.append(timestep[index])
+                index += 1
+
+        output.append(outputRow)
+
+# 7. Print and export the output array using print() and np.savez()
+output = np.array(output)
+print(output)
+np.savez("output.npz", *output)
 
 # Unsure things:
 # - How to calculate the Tm values around a '0' surrounded by 'X's
