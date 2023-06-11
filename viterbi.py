@@ -45,20 +45,6 @@ file.close()
 robotMap = np.array(robotMap, dtype=str)
 observations = np.array(observations, dtype=str)
 
-# 1. Build Tm (Transition/Probability of position change matrix)
-# Getting an array of valid positions
-validPositions = []
-rowNum = 0
-colNum = 0
-for row in robotMap:
-    for col in row:
-        if col == "0":
-            validPositions.append((rowNum, colNum))
-
-        colNum += 1
-    colNum = 0
-    rowNum += 1
-
 # Finds and returns the values of adjacent positions on the robot map
 def FindAdjacentValues(rowNum, colNum):
     adjValues = {"north": "null",
@@ -88,6 +74,32 @@ def FindAdjacentValues(rowNum, colNum):
 
     return adjValues
 
+# 1. Build Tm (Transition/Probability of position change matrix)
+# Getting an array of valid positions
+validPositions = []
+rowNum = 0
+colNum = 0
+for row in robotMap:
+
+    for col in row:
+        if col == '0':
+            # If we have an isolated '0' point, surrounded by Xs, then skip
+            # since it has no neighbours and there are no parts of the transition matrix
+            # to put probabilities on (the robot can't move)
+
+            # So, a value needs at least 1 neighbour to be a valid point
+            adjValues = FindAdjacentValues(rowNum, colNum)
+            for key in adjValues:
+                value = adjValues.get(key)
+                if value == '0':
+                    validPositions.append((rowNum, colNum))
+                    break
+
+        colNum += 1
+
+    colNum = 0
+    rowNum += 1
+
 # Building the Tm matrix
 Tm = []
 rowNum = 0
@@ -110,7 +122,7 @@ for fromPos in validPositions:
             neighbours[toPos] = True
         elif abs(xTo - xFrom) == 0 and abs(yTo - yFrom) == 1:
             neighbours[toPos] = True
-    
+
     # Putting the probabilities of travelling from this point into the transition matrix
     row = []
     prob = 1/len(neighbours)
@@ -121,6 +133,7 @@ for fromPos in validPositions:
             row.append(0)
 
     Tm.append(row)
+
 
 print("Transition matrix:")
 for row in Tm:
@@ -166,7 +179,7 @@ trellis = []
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
-#   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki ∗ Em_ij
+#   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
 #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
 #      (more than 1 if multiple positions have the same highest value!)
 #   c. Find the maximum probability calculated from "KTemp", and put that into the position i, and timestep j in the trellis matrix
@@ -179,4 +192,5 @@ trellis = []
 output = []
 
 # 6. Print and export the output array using print() and np.savez()
-np.savez("output.npz", *Em)
+# print(output)
+# np.savez("output.npz", *output)
