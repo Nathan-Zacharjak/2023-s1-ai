@@ -125,7 +125,7 @@ for fromPos in validPositions:
     prob = 0
     if len(neighbours) > 0:
         prob = 1/len(neighbours)
-        
+
     for pos in validPositions:
         if neighbours.get(pos):
             row.append(prob)
@@ -192,5 +192,5 @@ trellis = []
 output = []
 
 # 6. Print and export the output array using print() and np.savez()
-# print(output)
-# np.savez("output.npz", *output)
+print(output)
+np.savez("output.npz", *output)
