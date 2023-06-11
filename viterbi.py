@@ -171,10 +171,19 @@ for row in Em:
     print(row)
 
 # 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
-#    trellis[i,1] ← πi * Emiy1
+validPositionCount = len(validPositions)
+prob = 1/validPositionCount
+Pi = []
+for i in range(validPositionCount):
+    Pi.append(prob)
+    
+print("Initial probabilities:")
+print(Pi)
 
 # 4. Add the first entry to the trellis matrix, by implementing the first for loop in the pseudoscope
 #    using the array of initial probabilities and the emission matrix
+#    For each position i:
+#    trellis[i,1] ← πi * Em_iy_1
 trellis = []
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
@@ -192,5 +201,5 @@ trellis = []
 output = []
 
 # 6. Print and export the output array using print() and np.savez()
-print(output)
-np.savez("output.npz", *output)
+# print(output)
+# np.savez("output.npz", *output)
