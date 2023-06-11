@@ -128,9 +128,9 @@ for row in Tm:
 
 # 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
 # For every valid position, find the number of incorrect detections for each observation
-incorrectObsCount = []
+Em = []
 for pos in validPositions:
-    observationRow = []
+    posRow = []
     adjValues = FindAdjacentValues(pos[0], pos[1])
 
     for obs in observations:
@@ -144,13 +144,18 @@ for pos in validPositions:
             incorrectCount += 1
         if adjValues.get("east") != obs[3]:
             incorrectCount += 1
-        
-        observationRow.append(incorrectCount)
+
+        # Use the incorrect count to now calculate the value
+        # that goes in the emission matrix
+        prob = pow(1 - errorRate, 4 - incorrectCount) * pow(errorRate, incorrectCount)
+
+        posRow.append(prob)
     
-    incorrectObsCount.append(observationRow)
+    Em.append(posRow)
 
-print(incorrectObsCount)
-
+print("Emission matrix:")
+for row in Em:
+    print(row)
 
 # 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
 #    trellis[i,1] ← πi * Emiy1
@@ -174,5 +179,4 @@ trellis = []
 output = []
 
 # 6. Print and export the output array using print() and np.savez()
-# print(output)
-# np.savez("output.npz", *output)
+np.savez("output.npz", *Em)
