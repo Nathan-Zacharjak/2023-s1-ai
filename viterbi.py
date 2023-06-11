@@ -176,7 +176,7 @@ prob = 1/validPositionCount
 Pi = []
 for i in range(validPositionCount):
     Pi.append(prob)
-    
+
 print("Initial probabilities:")
 print(Pi)
 
@@ -185,6 +185,7 @@ print(Pi)
 #    For each position i:
 #    trellis[i,1] ← πi * Em_iy_1
 trellis = []
+
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
