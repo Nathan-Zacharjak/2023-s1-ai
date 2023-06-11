@@ -186,6 +186,16 @@ print(Pi)
 #    trellis[i,1] ← πi * Em_iy_1
 trellis = []
 
+firstTrellisColumn = []
+for i, pos in enumerate(validPositions):
+    print("Pos: ", pos)
+    print("Pi: ", Pi[i])
+    print("Em_iy_1: ", Em[i][1])
+    prob = Pi[i] * Em[i][1]
+    print(prob)
+    firstTrellisColumn.append(prob)
+
+trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
@@ -202,5 +212,12 @@ trellis = []
 output = []
 
 # 6. Print and export the output array using print() and np.savez()
-# print(output)
-# np.savez("output.npz", *output)
+print(trellis)
+np.savez("output.npz", *trellis)
+
+# Unsure things:
+# - How to calculate the Tm values around a '0' surrounded by 'X's
+# (All 0 probability I'm guessing)
+# - How to ensure the program "expands" in NSWE order
+# - K is the "most likely prior positions" <--- Why is this "positions" and not "position"?
+# but what does max_k() mean?
