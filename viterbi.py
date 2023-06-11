@@ -30,6 +30,9 @@ for line in file:
         noOfObservations = int(line[0])
     elif lineCount > 2 + mapRows and lineCount < 3 + mapRows + noOfObservations:
         for char in line[0]:
+            if char == '1':
+                char = 'X'
+
             obsArray.append(char)
 
         observations.append(obsArray)
@@ -57,7 +60,7 @@ for row in robotMap:
     rowNum += 1
 
 # Finds and returns the values of adjacent positions on the robot map
-def FindAdjacentValues(value, rowNum, colNum):
+def FindAdjacentValues(rowNum, colNum):
     adjValues = {"north": "null",
                  "south": "null",
                  "west": "null",
@@ -107,10 +110,6 @@ for fromPos in validPositions:
             neighbours[toPos] = True
         elif abs(xTo - xFrom) == 0 and abs(yTo - yFrom) == 1:
             neighbours[toPos] = True
-
-    
-    print(fromPos)
-    print(neighbours)
     
     # Putting the probabilities of travelling from this point into the transition matrix
     row = []
@@ -128,6 +127,29 @@ for row in Tm:
     print(row)
 
 # 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
+# For every valid position, find the number of incorrect detections for each observation
+incorrectObsCount = []
+for pos in validPositions:
+    observationRow = []
+    adjValues = FindAdjacentValues(pos[0], pos[1])
+
+    for obs in observations:
+        incorrectCount = 0
+
+        if adjValues.get("north") != obs[0]:
+            incorrectCount += 1
+        if adjValues.get("south") != obs[1]:
+            incorrectCount += 1
+        if adjValues.get("west") != obs[2]:
+            incorrectCount += 1
+        if adjValues.get("east") != obs[3]:
+            incorrectCount += 1
+        
+        observationRow.append(incorrectCount)
+    
+    incorrectObsCount.append(observationRow)
+
+print(incorrectObsCount)
 
 
 # 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
@@ -152,5 +174,5 @@ trellis = []
 output = []
 
 # 6. Print and export the output array using print() and np.savez()
-print(output)
-np.savez("output.npz", *output)
+# print(output)
+# np.savez("output.npz", *output)
