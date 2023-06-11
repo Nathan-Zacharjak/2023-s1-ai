@@ -83,17 +83,7 @@ for row in robotMap:
 
     for col in row:
         if col == '0':
-            # If we have an isolated '0' point, surrounded by Xs, then skip
-            # since it has no neighbours and there are no parts of the transition matrix
-            # to put probabilities on (the robot can't move)
-
-            # So, a value needs at least 1 neighbour to be a valid point
-            adjValues = FindAdjacentValues(rowNum, colNum)
-            for key in adjValues:
-                value = adjValues.get(key)
-                if value == '0':
-                    validPositions.append((rowNum, colNum))
-                    break
+            validPositions.append((rowNum, colNum))
 
         colNum += 1
 
@@ -123,9 +113,19 @@ for fromPos in validPositions:
         elif abs(xTo - xFrom) == 0 and abs(yTo - yFrom) == 1:
             neighbours[toPos] = True
 
-    # Putting the probabilities of travelling from this point into the transition matrix
     row = []
-    prob = 1/len(neighbours)
+    # If we have an isolated '0' point, surrounded by Xs, then skip
+    # since it has no neighbours and there are no parts of the transition matrix
+    # to put probabilities on (the robot can't move)
+    # By definition of the transition model, since j's are in the
+    # neighbours set, no values get set in the transition matrix
+    # (they stay 0)
+    
+    # Putting the probabilities of travelling from this point into the transition matrix
+    prob = 0
+    if len(neighbours) > 0:
+        prob = 1/len(neighbours)
+        
     for pos in validPositions:
         if neighbours.get(pos):
             row.append(prob)
