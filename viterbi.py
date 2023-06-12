@@ -135,9 +135,9 @@ for fromPos in validPositions:
     Tm.append(row)
 
 
-print("Transition matrix:")
-for row in Tm:
-    print(row)
+# print("Transition matrix:")
+# for row in Tm:
+#     print(row)
 
 # 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
 # For every valid position, find the number of incorrect detections for each observation
@@ -166,9 +166,9 @@ for pos in validPositions:
     
     Em.append(posRow)
 
-print("Emission matrix:")
-for row in Em:
-    print(row)
+# print("Emission matrix:")
+# for row in Em:
+#     print(row)
 
 # 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
 validPositionCount = len(validPositions)
@@ -177,8 +177,7 @@ Pi = []
 for i in range(validPositionCount):
     Pi.append(prob)
 
-print("Initial probabilities:")
-print(Pi)
+# print("Initial probabilities:", prob)
 
 # 4. Add the first entry to the trellis matrix, by implementing the first for loop in the pseudoscope
 #    using the array of initial probabilities and the emission matrix
@@ -188,9 +187,7 @@ trellis = []
 
 firstTrellisColumn = []
 for i, pos in enumerate(validPositions):
-    print(pos)
     prob = Pi[i] * Em[i][0]
-    print(prob)
     firstTrellisColumn.append(prob)
 
 firstTrellisColumn = np.array(firstTrellisColumn)
@@ -198,6 +195,29 @@ trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
+for j, obs in enumerate(observations):
+    # We've already done the 1st column of the trellis matrix
+    if j != 1:
+        continue
+
+    mostLikelyPriorPositions = []
+    maxProb = 0
+    # Find the set of positions that have the max probability
+    for i, pos in enumerate(validPositions):
+        print(len(trellis[0]), i)
+        prob = trellis[j-1][i]
+
+        if prob > maxProb:
+            maxProb = prob
+            mostLikelyPriorPositions = []
+            # Add the position and position ID
+            mostLikelyPriorPositions.append((pos,i))
+        elif prob == maxProb:
+            mostLikelyPriorPositions.append((pos,i))
+
+    print(mostLikelyPriorPositions)
+    print(maxProb)
+print(trellis)
 #   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
 #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
 #      (more than 1 if multiple positions have the same highest value!)
@@ -210,20 +230,26 @@ trellis.append(firstTrellisColumn)
 output = []
 index = 0
 for timestep in trellis:
+    outputTimestep = []
+
     for row in robotMap:
-        outputRow = []
+        timestepRow = []
 
         for col in row:
             if col == 'X':
-                outputRow.append(0)
+                timestepRow.append(0)
             else:
-                outputRow.append(timestep[index])
+                timestepRow.append(timestep[index])
                 index += 1
 
-        output.append(outputRow)
+        outputTimestep.append(timestepRow)
+    
+    outputTimestep = np.array(outputTimestep)
+    output.append(outputTimestep)
 
 # 7. Print and export the output array using print() and np.savez()
-output = np.array(output)
+# output = np.array(output)
+print("Output trellis:")
 print(output)
 np.savez("output.npz", *output)
 
