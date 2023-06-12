@@ -195,10 +195,6 @@ trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 for j, obs in enumerate(observations):
-
-    if j != 1:
-        continue
-
     # We've already done the 1st column of the trellis matrix
     if j == 0:
         continue
@@ -207,35 +203,44 @@ for j, obs in enumerate(observations):
     mostLikelyPriorPositions = []
     maxProb = 0
     # Find the set of positions that have the max probability
-    for ID, pos in enumerate(validPositions):
+    for k, prevPos in enumerate(validPositions):
         prob = trellis[j-1][i]
 
         if prob > maxProb:
             maxProb = prob
             mostLikelyPriorPositions = []
             # Add the position and position ID
-            mostLikelyPriorPositions.append(ID)
+            mostLikelyPriorPositions.append((k,prevPos))
         elif prob == maxProb:
-            mostLikelyPriorPositions.append(ID)
+            mostLikelyPriorPositions.append((k,prevPos))
 
-    for i, state in enumerate(validPositions):
-        #   b. Calculate a temporary set of probabilities "mostLikelyPosProbs" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
+    trellisRow = []
+    for i, nextPos in enumerate(validPositions):
+        #   b. Calculate a temporary set of probabilities "mostLikelyPriorPosProbs" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
         #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
         #      (more than 1 if multiple positions have the same highest value!)
-        mostLikelyPosProbs = []
-        for k in mostLikelyPriorPositions:
+        nextPositionProbs = []
+        for k, priorPos in enumerate(mostLikelyPriorPositions):
 
             prob = trellis[j-1][k] * Tm[k][i] * Em[i][j]
-            mostLikelyPosProbs.append(prob)
+            nextPositionProbs.append(prob)
         
         # Printing this is probably where the NSWE expansion priority comes from...
+        # When there's a tie in the max probability we're about to calculate below...
         print(mostLikelyPriorPositions)
-        print(mostLikelyPosProbs)
+        print(nextPositionProbs)
 
-        #   c. Find the maximum probability calculated from "mostLikelyPosProbs", and put that into the position i, and timestep j in the trellis matrix
-        
+        #   c. Find the maximum probability calculated from "mostLikelyPriorPosProbs",
+        #      and put that into the position i, and timestep j in the trellis matrix
+        maxProb = 0
+        for k, nextPosProb in enumerate(nextPositionProbs):
+            if maxProb < nextPosProb:
+                maxProb = nextPosProb
 
-#   d. Repeat for the next position until all positions are done for that timestep, repeat for every timestep
+        trellisRow.append(maxProb)
+
+    trellisRow = np.array(trellisRow)
+    trellis.append(trellisRow)
 
 # 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
 #    as formatted by gradescope by adding 0's at each of the X positions of the robot map
@@ -255,6 +260,7 @@ for timestep in trellis:
                 timestepRow.append(timestep[index])
                 index += 1
 
+        index = 0
         outputTimestep.append(timestepRow)
     
     outputTimestep = np.array(outputTimestep)
@@ -262,9 +268,9 @@ for timestep in trellis:
 
 # 7. Print and export the output array using print() and np.savez()
 # output = np.array(output)
-# print("Output trellis:")
-# print(output)
-# np.savez("output.npz", *output)
+print("Output trellis:")
+print(output)
+np.savez("output.npz", *output)
 
 # Unsure things:
 # - How to calculate the Tm values around a '0' surrounded by 'X's
