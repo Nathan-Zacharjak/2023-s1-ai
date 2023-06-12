@@ -221,15 +221,10 @@ for j, obs in enumerate(observations):
         #   c. Find the maximum probability calculated from "mostLikelyPriorPosProbs",
         #      and put that into the position i, and timestep j in the trellis matrix
         maxProb = 0
-        maxProbPositions = []
 
-        for k, nextPosProb in enumerate(nextPositionProbs):
+        for nextPosProb in nextPositionProbs:
             if maxProb < nextPosProb:
                 maxProb = nextPosProb
-                maxProbPositions = []
-                maxProbPositions.append(k)
-            elif maxProb == nextPosProb:
-                maxProbPositions.append(k)
 
         trellisRow.append(maxProb)
 
