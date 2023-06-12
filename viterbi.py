@@ -196,32 +196,33 @@ trellis.append(firstTrellisColumn)
 # 5. Do the gigachad 2nd for loop in the pesudocode
 for j, obs in enumerate(observations):
 
-    if j != 1:
-        continue
+    # if j != 1:
+    #     continue
 
     # We've already done the 1st column of the trellis matrix
     if j == 0:
         continue
 
-    #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
-    mostLikelyPriorPositions = []
-    maxProb = 0
-    # Find the set of positions that have the max probability
-    for k, prevPos in enumerate(validPositions):
-        prob = trellis[j-1][i]
-
-        if prob > maxProb:
-            maxProb = prob
-            mostLikelyPriorPositions = []
-            # Add the position and position ID
-            mostLikelyPriorPositions.append((k,prevPos))
-        elif prob == maxProb:
-            mostLikelyPriorPositions.append((k,prevPos))
-
     trellisRow = []
     for i, nextPos in enumerate(validPositions):
-        if i != 9:
-            continue
+        # if i != 9:
+        #     continue
+
+        #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
+        mostLikelyPriorPositions = []
+        maxProb = 0
+        # Find the set of positions that have the max probability
+        for k, prevPos in enumerate(validPositions):
+            prob = trellis[j-1][i]
+
+            if prob > maxProb:
+                maxProb = prob
+                mostLikelyPriorPositions = []
+                # Add the position and position ID
+                mostLikelyPriorPositions.append((k,prevPos))
+            elif prob == maxProb:
+                mostLikelyPriorPositions.append((k,prevPos))
+        
         #   b. Calculate a temporary set of probabilities "mostLikelyPriorPosProbs" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
         #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
         #      (more than 1 if multiple positions have the same highest value!)
@@ -233,8 +234,8 @@ for j, obs in enumerate(observations):
         
         # Printing this is probably where the NSWE expansion priority comes from...
         # When there's a tie in the max probability we're about to calculate below...
-        print(mostLikelyPriorPositions)
-        print(nextPositionProbs)
+        # print(mostLikelyPriorPositions)
+        # print(nextPositionProbs)
 
         #   c. Find the maximum probability calculated from "mostLikelyPriorPosProbs",
         #      and put that into the position i, and timestep j in the trellis matrix
@@ -248,10 +249,10 @@ for j, obs in enumerate(observations):
             elif maxProb == nextPosProb:
                 maxProbPositions.append(k)
 
-        print(maxProb)
-        for posKID in maxProbPositions:
-            print("Prior position:", mostLikelyPriorPositions[posKID])
-        print("Next position:", (i, nextPos))
+        # print(maxProb)
+        # for posKID in maxProbPositions:
+        #     print("Prior position:", mostLikelyPriorPositions[posKID])
+        # print("Next position:", (i, nextPos))
 
         trellisRow.append(maxProb)
 
@@ -261,29 +262,28 @@ for j, obs in enumerate(observations):
 # 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
 #    as formatted by gradescope by adding 0's at each of the X positions of the robot map
 #    and put them into an array called "output"
-# output = []
-# index = 0
-# for timestep in trellis:
-#     outputTimestep = []
+output = []
+index = 0
+for timestep in trellis:
+    outputTimestep = []
 
-#     for row in robotMap:
-#         timestepRow = []
+    for row in robotMap:
+        timestepRow = []
 
-#         for col in row:
-#             if col == 'X':
-#                 timestepRow.append(0)
-#             else:
-#                 timestepRow.append(timestep[index])
-#                 index += 1
+        for col in row:
+            if col == 'X':
+                timestepRow.append(0)
+            else:
+                timestepRow.append(timestep[index])
+                index += 1
 
-#         index = 0
-#         outputTimestep.append(timestepRow)
+        index = 0
+        outputTimestep.append(timestepRow)
     
-#     outputTimestep = np.array(outputTimestep)
-#     output.append(outputTimestep)
+    outputTimestep = np.array(outputTimestep)
+    output.append(outputTimestep)
 
 # 7. Print and export the output array using print() and np.savez()
-# output = np.array(output)
-# print("Output trellis:")
-# print(output)
-# np.savez("output.npz", *output)
+print("Output trellis:")
+print(output)
+np.savez("output.npz", *output)
