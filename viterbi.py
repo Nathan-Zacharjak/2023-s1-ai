@@ -195,6 +195,10 @@ trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 for j, obs in enumerate(observations):
+
+    if j != 1:
+        continue
+
     # We've already done the 1st column of the trellis matrix
     if j == 0:
         continue
@@ -216,6 +220,8 @@ for j, obs in enumerate(observations):
 
     trellisRow = []
     for i, nextPos in enumerate(validPositions):
+        if i != 9:
+            continue
         #   b. Calculate a temporary set of probabilities "mostLikelyPriorPosProbs" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
         #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
         #      (more than 1 if multiple positions have the same highest value!)
@@ -233,9 +239,19 @@ for j, obs in enumerate(observations):
         #   c. Find the maximum probability calculated from "mostLikelyPriorPosProbs",
         #      and put that into the position i, and timestep j in the trellis matrix
         maxProb = 0
+        maxProbPositions = []
         for k, nextPosProb in enumerate(nextPositionProbs):
             if maxProb < nextPosProb:
                 maxProb = nextPosProb
+                maxProbPositions = []
+                maxProbPositions.append(k)
+            elif maxProb == nextPosProb:
+                maxProbPositions.append(k)
+
+        print(maxProb)
+        for posKID in maxProbPositions:
+            print("Prior position:", mostLikelyPriorPositions[posKID])
+        print("Next position:", (i, nextPos))
 
         trellisRow.append(maxProb)
 
@@ -245,36 +261,29 @@ for j, obs in enumerate(observations):
 # 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
 #    as formatted by gradescope by adding 0's at each of the X positions of the robot map
 #    and put them into an array called "output"
-output = []
-index = 0
-for timestep in trellis:
-    outputTimestep = []
+# output = []
+# index = 0
+# for timestep in trellis:
+#     outputTimestep = []
 
-    for row in robotMap:
-        timestepRow = []
+#     for row in robotMap:
+#         timestepRow = []
 
-        for col in row:
-            if col == 'X':
-                timestepRow.append(0)
-            else:
-                timestepRow.append(timestep[index])
-                index += 1
+#         for col in row:
+#             if col == 'X':
+#                 timestepRow.append(0)
+#             else:
+#                 timestepRow.append(timestep[index])
+#                 index += 1
 
-        index = 0
-        outputTimestep.append(timestepRow)
+#         index = 0
+#         outputTimestep.append(timestepRow)
     
-    outputTimestep = np.array(outputTimestep)
-    output.append(outputTimestep)
+#     outputTimestep = np.array(outputTimestep)
+#     output.append(outputTimestep)
 
 # 7. Print and export the output array using print() and np.savez()
 # output = np.array(output)
-print("Output trellis:")
-print(output)
-np.savez("output.npz", *output)
-
-# Unsure things:
-# - How to calculate the Tm values around a '0' surrounded by 'X's
-# (All 0 probability I'm guessing)
-# - How to ensure the program "expands" in NSWE order
-# - K is the "most likely prior positions" <--- Why is this "positions" and not "position"?
-# but what does max_k() mean?
+# print("Output trellis:")
+# print(output)
+# np.savez("output.npz", *output)
