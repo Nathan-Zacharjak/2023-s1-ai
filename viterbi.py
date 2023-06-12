@@ -194,9 +194,8 @@ firstTrellisColumn = np.array(firstTrellisColumn)
 trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
-#   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
 for j, obs in enumerate(observations):
-    
+
     if j != 1:
         continue
 
@@ -204,10 +203,11 @@ for j, obs in enumerate(observations):
     if j == 0:
         continue
 
+    #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
     mostLikelyPriorPositions = []
     maxProb = 0
     # Find the set of positions that have the max probability
-    for i, pos in enumerate(validPositions):
+    for ID, pos in enumerate(validPositions):
         print(len(trellis[0]), i)
         prob = trellis[j-1][i]
 
@@ -215,15 +215,20 @@ for j, obs in enumerate(observations):
             maxProb = prob
             mostLikelyPriorPositions = []
             # Add the position and position ID
-            mostLikelyPriorPositions.append((pos,i))
+            mostLikelyPriorPositions.append(ID)
         elif prob == maxProb:
-            mostLikelyPriorPositions.append((pos,i))
+            mostLikelyPriorPositions.append(ID)
 
-    
+    for i, state in enumerate(validPositions):
+        #   b. Calculate a temporary set of probabilities "mostLikelyPosProbs" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
+        #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
+        #      (more than 1 if multiple positions have the same highest value!)
+        mostLikelyPosProbs = []
+        for k in mostLikelyPriorPositions:
+            
+            prob = trellis[j-1,k] * Tm[k,i] * Em[i][j]
+            mostLikelyPosProbs.append(prob)
 
-#   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
-#      for each most likely prior position(s) in K, where k is one of the most likely prior positions
-#      (more than 1 if multiple positions have the same highest value!)
 #   c. Find the maximum probability calculated from "KTemp", and put that into the position i, and timestep j in the trellis matrix
 #   d. Repeat for the next position until all positions are done for that timestep, repeat for every timestep
 
