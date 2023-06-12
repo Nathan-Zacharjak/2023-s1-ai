@@ -212,8 +212,10 @@ for j, obs in enumerate(observations):
         #      (more than 1 if multiple positions have the same highest value!)
         nextPositionProbs = []
         for k, priorPos in enumerate(mostLikelyPriorPositions):
+            # Need to convert k into the actual position's id, stored as first argument
+            priorPosID = priorPos[0]
 
-            prob = trellis[j-1][k] * Tm[k][i] * Em[i][j]
+            prob = trellis[j-1][priorPosID] * Tm[priorPosID][i] * Em[i][j]
             nextPositionProbs.append(prob)
 
         #   c. Find the maximum probability calculated from "mostLikelyPriorPosProbs",
