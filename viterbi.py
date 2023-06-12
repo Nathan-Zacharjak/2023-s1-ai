@@ -134,11 +134,6 @@ for fromPos in validPositions:
 
     Tm.append(row)
 
-
-# print("Transition matrix:")
-# for row in Tm:
-#     print(row)
-
 # 2. Build Em (Emission/Probability of observation error matrix) (NSWE)
 # For every valid position, find the number of incorrect detections for each observation
 Em = []
@@ -166,10 +161,6 @@ for pos in validPositions:
     
     Em.append(posRow)
 
-# print("Emission matrix:")
-# for i, row in enumerate(Em):
-#     print(row)
-
 # 3. Create the array of initial probabilities (Robot is equally likely to be at any position, 1/N probability)
 validPositionCount = len(validPositions)
 prob = 1/validPositionCount
@@ -193,22 +184,17 @@ trellis.append(firstTrellisColumn)
 
 # 5. Do the gigachad 2nd for loop in the pesudocode
 for j, obs in enumerate(observations):
-
-    # if j != 1:
-    #     continue
+    trellisRow = []
 
     # We've already done the 1st column of the trellis matrix
     if j == 0:
         continue
 
-    trellisRow = []
     for i, nextPos in enumerate(validPositions):
-        # if i != 9:
-        #     continue
-
         #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
         mostLikelyPriorPositions = []
         maxProb = 0
+
         # Find the set of positions that have the max probability
         for k, prevPos in enumerate(validPositions):
             prob = trellis[j-1][i]
@@ -229,16 +215,12 @@ for j, obs in enumerate(observations):
 
             prob = trellis[j-1][k] * Tm[k][i] * Em[i][j]
             nextPositionProbs.append(prob)
-        
-        # Printing this is probably where the NSWE expansion priority comes from...
-        # When there's a tie in the max probability we're about to calculate below...
-        # print(mostLikelyPriorPositions)
-        # print(nextPositionProbs)
 
         #   c. Find the maximum probability calculated from "mostLikelyPriorPosProbs",
         #      and put that into the position i, and timestep j in the trellis matrix
         maxProb = 0
         maxProbPositions = []
+
         for k, nextPosProb in enumerate(nextPositionProbs):
             if maxProb < nextPosProb:
                 maxProb = nextPosProb
@@ -246,11 +228,6 @@ for j, obs in enumerate(observations):
                 maxProbPositions.append(k)
             elif maxProb == nextPosProb:
                 maxProbPositions.append(k)
-
-        # print(maxProb)
-        # for posKID in maxProbPositions:
-        #     print("Prior position:", mostLikelyPriorPositions[posKID])
-        # print("Next position:", (i, nextPos))
 
         trellisRow.append(maxProb)
 
