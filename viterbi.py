@@ -196,8 +196,12 @@ trellis.append(firstTrellisColumn)
 # 5. Do the gigachad 2nd for loop in the pesudocode
 #   a. Find the set of most likely prior positions at the previous j-1 timestep, and put this into variable K
 for j, obs in enumerate(observations):
-    # We've already done the 1st column of the trellis matrix
+    
     if j != 1:
+        continue
+
+    # We've already done the 1st column of the trellis matrix
+    if j == 0:
         continue
 
     mostLikelyPriorPositions = []
@@ -215,9 +219,8 @@ for j, obs in enumerate(observations):
         elif prob == maxProb:
             mostLikelyPriorPositions.append((pos,i))
 
-    print(mostLikelyPriorPositions)
-    print(maxProb)
-print(trellis)
+    
+
 #   b. Calculate a temporary set of probabilities "KTemp" using trellis[i,j] ← trellis[k, j - 1] * Tm_ki * Em_ij
 #      for each most likely prior position(s) in K, where k is one of the most likely prior positions
 #      (more than 1 if multiple positions have the same highest value!)
