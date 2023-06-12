@@ -208,7 +208,6 @@ for j, obs in enumerate(observations):
     maxProb = 0
     # Find the set of positions that have the max probability
     for ID, pos in enumerate(validPositions):
-        print(len(trellis[0]), i)
         prob = trellis[j-1][i]
 
         if prob > maxProb:
@@ -225,11 +224,17 @@ for j, obs in enumerate(observations):
         #      (more than 1 if multiple positions have the same highest value!)
         mostLikelyPosProbs = []
         for k in mostLikelyPriorPositions:
-            
-            prob = trellis[j-1,k] * Tm[k,i] * Em[i][j]
-            mostLikelyPosProbs.append(prob)
 
-#   c. Find the maximum probability calculated from "KTemp", and put that into the position i, and timestep j in the trellis matrix
+            prob = trellis[j-1][k] * Tm[k][i] * Em[i][j]
+            mostLikelyPosProbs.append(prob)
+        
+        # Printing this is probably where the NSWE expansion priority comes from...
+        print(mostLikelyPriorPositions)
+        print(mostLikelyPosProbs)
+
+        #   c. Find the maximum probability calculated from "mostLikelyPosProbs", and put that into the position i, and timestep j in the trellis matrix
+        
+
 #   d. Repeat for the next position until all positions are done for that timestep, repeat for every timestep
 
 # 6. Reformat the arrays of probabilities (the "trellis" array) into proper trellis matrices,
@@ -257,9 +262,9 @@ for timestep in trellis:
 
 # 7. Print and export the output array using print() and np.savez()
 # output = np.array(output)
-print("Output trellis:")
-print(output)
-np.savez("output.npz", *output)
+# print("Output trellis:")
+# print(output)
+# np.savez("output.npz", *output)
 
 # Unsure things:
 # - How to calculate the Tm values around a '0' surrounded by 'X's
